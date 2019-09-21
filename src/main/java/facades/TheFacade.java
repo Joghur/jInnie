@@ -4,6 +4,8 @@ import entities.Customer;
 import entities.ItemType;
 import entities.OrderLine;
 import entities.Ordrer;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -130,6 +132,22 @@ public class TheFacade {
     }
 
     /**
+     * Create Order
+     */
+    public Ordrer createNewOrder() {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Ordrer o = new Ordrer();
+            em.getTransaction().begin();
+            em.persist(o);
+            em.getTransaction().commit();
+            return o;
+        } finally {
+            em.close();
+        }
+    }
+
+    /**
      * ORD(R)ERS
      */
     public Ordrer findOrdrer(int id) {
@@ -197,5 +215,59 @@ public class TheFacade {
             em.close();
         }
     }
+    
+    public static void main(String[] args) {
+        emf = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
+        TheFacade facade = TheFacade.getTheFacade(emf);
 
+        // Adding customers
+        System.out.println("\nAdding customers");
+        facade.addCustomer("Haldor Topsøe A/S", "Haldor Topsøes Allé 1, DK-2800 Kgs. Lyngby", "Martin Østberg", "mro@topsoe.com", "22754756");
+        //Finding all customers
+        System.out.println("\nGetting all customers:");
+        for (Customer allCustomer : facade.getAllCustomers()) {
+            System.out.println(allCustomer);
+        }
+
+//         Adding itemtypes
+        System.out.println("\nAdding itemtypes");
+        facade.addItemType("Konsultent arbejde", "Fejlfinding og udredning af IT problemer", 650.00);
+        // Create an Order and Add it to a Customer
+        System.out.println("\nCreate an Order");
+        Ordrer o1 = facade.createNewOrder();
+        o1.setInvoiceDate(LocalDate.now());
+        o1.setWorkDoneDate(LocalDate.of(2019, Month.SEPTEMBER, 17));
+        o1.setInvoiceID(o1.hashCode());
+        Customer cust = facade.addOrdrerToCustomer(1, o1);
+        System.out.println("Add order to customer: #" + cust.getCustomerID() + " "
+                + cust.getCustomerFirmName() + "," + cust.getCustomerContactName());
+
+        //Create an OrderLine for a specific ItemType, and add it to an Order
+        System.out.println("\nCreating an OrderLine");
+
+        facade.addOrderLineToOrder(o1.getOrdrerID(), 3, 1);              // order#, quantity, itemtype#
+
+//      Find all Orders, for a specific Customer
+        List<Ordrer> oList = facade.getAllOrdersPerCustomer(1);
+        System.out.println("\nAll orders from customer #1:");
+        double totalPrice = 0;
+        for (Ordrer or : oList) {
+            System.out.println("Order #" + or.getOrdrerID() + " - " + or.getCustomer());
+
+//      Find the total price of an order   
+            List<OrderLine> ol1List = facade.getTotalOrderPrice(or.getOrdrerID());
+            System.out.println("Orderline price:");
+            for (OrderLine orderLine : ol1List) {
+                int quantity = orderLine.getQuantity();
+                double price = orderLine.getItemType().getPrice();
+                totalPrice += quantity * price;
+                System.out.println(quantity
+                        + " x " + orderLine.getItemType().getName()
+                        + " á " + price + " kr."
+                        + " = " + quantity * price + " kr.");
+            }
+        }
+        System.out.println("Order total price: " + totalPrice + " kr.");
+
+    }
 }

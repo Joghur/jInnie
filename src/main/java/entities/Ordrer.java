@@ -27,6 +27,7 @@ public class Ordrer implements Serializable { //spelled like that to avoid possi
     
     private Integer invoiceID;
     private LocalDate invoiceDate;
+    private LocalDate workDoneDate;
 
     @OneToMany(mappedBy = "ordrer", cascade = CascadeType.PERSIST)
     private List<OrderLine> orderLines = new ArrayList();
@@ -68,6 +69,14 @@ public class Ordrer implements Serializable { //spelled like that to avoid possi
 
     public void setInvoiceDate(LocalDate invoiceDate) {
         this.invoiceDate = invoiceDate;
+    }
+
+    public LocalDate getWorkDoneDate() {
+        return workDoneDate;
+    }
+
+    public void setWorkDoneDate(LocalDate workDoneDate) {
+        this.workDoneDate = workDoneDate;
     }
 
     public List<OrderLine> getOrderLines() {
@@ -112,7 +121,7 @@ public class Ordrer implements Serializable { //spelled like that to avoid possi
 
     @Override
     public String toString() {
-        return "Ordrer{" + "ordrerID=" + ordrerID + ", invoiceID=" + invoiceID + ", invoiceDate=" + invoiceDate + ", orderLines=" + orderLines + ", customer=" + customer + '}';
+        return "Ordrer{" + "ordrerID=" + ordrerID + ", invoiceID=" + invoiceID + ", invoiceDate=" + invoiceDate + ", workDoneDate=" + workDoneDate + ", orderLines=" + orderLines + ", customer=" + customer + '}';
     }
 
 
