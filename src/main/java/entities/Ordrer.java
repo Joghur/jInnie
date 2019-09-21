@@ -1,11 +1,13 @@
 package entities;
 
+import enumeration.OrderState;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -28,8 +30,10 @@ public class Ordrer implements Serializable { //spelled like that to avoid possi
     private Integer invoiceID;
     private LocalDate invoiceDate;
     private LocalDate workDoneDate;
+    private OrderState orderState;
 
     @OneToMany(mappedBy = "ordrer", cascade = CascadeType.PERSIST)
+//    @ElementCollection
     private List<OrderLine> orderLines = new ArrayList();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -37,6 +41,8 @@ public class Ordrer implements Serializable { //spelled like that to avoid possi
     private Customer customer;
 
     public Ordrer() {
+        this.orderState = OrderState.ORDER_RECEIVED;
+        this.invoiceID = this.hashCode();
     }
 
     public Integer getOrdrerID() {
@@ -79,6 +85,14 @@ public class Ordrer implements Serializable { //spelled like that to avoid possi
         this.workDoneDate = workDoneDate;
     }
 
+    public OrderState getOrderState() {
+        return orderState;
+    }
+
+    public void setOrderState(OrderState orderState) {
+        this.orderState = orderState;
+    }
+    
     public List<OrderLine> getOrderLines() {
         return orderLines;
     }
@@ -92,14 +106,12 @@ public class Ordrer implements Serializable { //spelled like that to avoid possi
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 71 * hash + Objects.hashCode(this.ordrerID);
-        hash = 71 * hash + Objects.hashCode(this.invoiceID);
-        hash = 71 * hash + Objects.hashCode(this.invoiceDate);
-        hash = 71 * hash + Objects.hashCode(this.orderLines);
-        hash = 71 * hash + Objects.hashCode(this.customer);
+        int hash = 7;
+        hash = 97 * hash + Objects.hashCode(this.ordrerID);
+        hash = 97 * hash + Objects.hashCode(this.customer);
         return hash;
     }
+
 
     @Override
     public boolean equals(Object obj) {
@@ -121,8 +133,9 @@ public class Ordrer implements Serializable { //spelled like that to avoid possi
 
     @Override
     public String toString() {
-        return "Ordrer{" + "ordrerID=" + ordrerID + ", invoiceID=" + invoiceID + ", invoiceDate=" + invoiceDate + ", workDoneDate=" + workDoneDate + ", orderLines=" + orderLines + ", customer=" + customer + '}';
+        return "Ordrer{" + "ordrerID=" + ordrerID + ", invoiceID=" + invoiceID + ", invoiceDate=" + invoiceDate + ", workDoneDate=" + workDoneDate + ", orderState=" + orderState + ", orderLines=" + orderLines + ", customer=" + customer + '}';
     }
+
 
 
 }

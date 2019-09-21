@@ -22,17 +22,21 @@ public class MasterData implements Serializable {
     private String phone;
     private String email;
     private String cvr;
+    private String bank;
+    private String account;
     
     
     public MasterData() {
     }
 
-    public MasterData(String name, String address, String phone, String email, String cvr) {
+    public MasterData(String name, String address, String phone, String email, String cvr, String bank, String account) {
         this.name = name;
         this.address = address;
         this.phone = phone;
         this.email = email;
         this.cvr = cvr;
+        this.bank = bank;
+        this.account = account;
     }
 
     public Integer getMasterDataID() {
@@ -83,6 +87,22 @@ public class MasterData implements Serializable {
         this.cvr = cvr;
     }
 
+    public String getBank() {
+        return bank;
+    }
+
+    public void setBank(String bank) {
+        this.bank = bank;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
     
     @Override
     public int hashCode() {
@@ -116,6 +136,7 @@ public class MasterData implements Serializable {
 
     @Override
     public String toString() {
-        return "MasterData{" + "masterDataID=" + masterDataID + ", name=" + name + ", address=" + address + ", phone=" + phone + ", email=" + email + ", cvr=" + cvr + '}';
+        return "MasterData{" + "masterDataID=" + masterDataID + ", name=" + name + ", address=" + address + ", phone=" + phone + ", email=" + email + ", cvr=" + cvr + ", bank=" + bank + ", account=" + account + '}';
     }
+
 }

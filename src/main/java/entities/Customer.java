@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-
 
 @Entity
 @NamedQuery(name = "Customer.deleteAllRows", query = "DELETE from Customer")
@@ -21,15 +21,17 @@ public class Customer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer customerID;
+    private Integer customerNumber;
     private String customerFirmName;
     private String customerFirmAddress;
     private String customerContactName;
     private String customerContactEmail;
     private String customerContactPhone;
-    
-    @OneToMany(mappedBy="customer",cascade = CascadeType.PERSIST)
+
+//    @ElementCollection
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.PERSIST)
     private List<Ordrer> ordrers = new ArrayList();
-    
+
     public Customer() {
     }
 
@@ -39,6 +41,7 @@ public class Customer implements Serializable {
         this.customerContactName = customerContactName;
         this.customerContactEmail = customerContactEmail;
         this.customerContactPhone = customerContactPhone;
+        this.customerNumber = this.hashCode();
     }
 
     public Integer getCustomerID() {
@@ -89,27 +92,37 @@ public class Customer implements Serializable {
         this.customerContactPhone = customerContactPhone;
     }
 
+    public Integer getCustomerNumber() {
+        return customerNumber;
+    }
 
+    public void setCustomerNumber(Integer customerNumber) {
+        this.customerNumber = customerNumber;
+    }
 
     public List<Ordrer> getOrdrers() {
         return ordrers;
     }
 
-      public void addOrder(Ordrer o){
+    public void addOrder(Ordrer o) {
         this.ordrers.add(o);
-        if (o.getCustomer()!= this) {
+        if (o.getCustomer() != this) {
             o.setCustomer(this);
         }
     }
 
     @Override
     public int hashCode() {
-        int hash = 5;
+        int hash = 7;
         hash = 71 * hash + Objects.hashCode(this.customerID);
+        hash = 71 * hash + Objects.hashCode(this.customerFirmName);
+        hash = 71 * hash + Objects.hashCode(this.customerFirmAddress);
+        hash = 71 * hash + Objects.hashCode(this.customerContactName);
+        hash = 71 * hash + Objects.hashCode(this.customerContactEmail);
+        hash = 71 * hash + Objects.hashCode(this.customerContactPhone);
         return hash;
     }
 
-    
 
     @Override
     public boolean equals(Object obj) {
@@ -133,7 +146,5 @@ public class Customer implements Serializable {
     public String toString() {
         return "Customer{" + "customerID=" + customerID + ", customerFirmName=" + customerFirmName + ", customerFirmAddress=" + customerFirmAddress + ", customerContactName=" + customerContactName + ", customerContactEmail=" + customerContactEmail + ", customerContactPhone=" + customerContactPhone + ", ordrers=" + ordrers + '}';
     }
-
- 
 
 }

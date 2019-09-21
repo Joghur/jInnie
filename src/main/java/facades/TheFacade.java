@@ -2,15 +2,19 @@ package facades;
 
 import entities.Customer;
 import entities.ItemType;
+import entities.MasterData;
 import entities.OrderLine;
 import entities.Ordrer;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 import utils.EMF_Creator;
+import utils.pdfMaker;
 
 /**
  *
@@ -117,11 +121,12 @@ public class TheFacade {
     /**
      * ORD(R)ERS
      */
-    public Customer addOrdrerToCustomer(int id, Ordrer o) {
+    public Customer addOrdrerToCustomer(int customerID, int ordrerID) {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
-            Customer c = em.find(Customer.class, id);
+            Customer c = em.find(Customer.class, customerID);
+            Ordrer o = em.find(Ordrer.class, ordrerID);
             c.addOrder(o);
             em.persist(c);
             em.getTransaction().commit();
@@ -134,14 +139,67 @@ public class TheFacade {
     /**
      * Create Order
      */
-    public Ordrer createNewOrder() {
+    public Ordrer createNewOrder(int customerID) {
         EntityManager em = emf.createEntityManager();
         try {
             Ordrer o = new Ordrer();
+            Customer c = em.find(Customer.class, customerID);
+            o.setCustomer(c);
             em.getTransaction().begin();
             em.persist(o);
             em.getTransaction().commit();
             return o;
+        } finally {
+            em.close();
+        }
+    }
+
+    /**
+     * Create Order
+     */
+    public Ordrer updateOrder(int orderID, Ordrer orig) {
+        Ordrer e = new Ordrer();
+        e.setInvoiceDate(orig.getInvoiceDate());
+        e.setWorkDoneDate(orig.getWorkDoneDate());
+        e.setCustomer(orig.getCustomer());
+        e.setOrderState(orig.getOrderState());
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            Ordrer o = em.find(Ordrer.class, orderID);
+            o.setInvoiceDate(e.getInvoiceDate());
+            o.setWorkDoneDate(e.getWorkDoneDate());
+            o.setCustomer(e.getCustomer());
+            o.setOrderState(e.getOrderState());
+            em.persist(o);
+            em.getTransaction().commit();
+            return o;
+        } finally {
+            em.close();
+        }
+    }
+
+    /**
+     * Create Order
+     */
+    public MasterData createMasterData(String name, String address, String phone, String email, String cvr, String bank, String account) {
+        MasterData m = new MasterData(name, address, phone, email, cvr, bank, account);
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.persist(m);
+            em.getTransaction().commit();
+            return m;
+        } finally {
+            em.close();
+        }
+    }
+
+    public MasterData getMasterData() {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<MasterData> num = em.createQuery("Select c from MasterData c", MasterData.class);
+            return (MasterData) num.getResultList().get(0);
         } finally {
             em.close();
         }
@@ -215,59 +273,44 @@ public class TheFacade {
             em.close();
         }
     }
-    
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws IOException {
         emf = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
-        TheFacade facade = TheFacade.getTheFacade(emf);
+        TheFacade facade =   TheFacade.getTheFacade(emf);
 
-        // Adding customers
-        System.out.println("\nAdding customers");
-        facade.addCustomer("Haldor Topsøe A/S", "Haldor Topsøes Allé 1, DK-2800 Kgs. Lyngby", "Martin Østberg", "mro@topsoe.com", "22754756");
-        //Finding all customers
-        System.out.println("\nGetting all customers:");
-        for (Customer allCustomer : facade.getAllCustomers()) {
-            System.out.println(allCustomer);
-        }
-
-//         Adding itemtypes
-        System.out.println("\nAdding itemtypes");
-        facade.addItemType("Konsultent arbejde", "Fejlfinding og udredning af IT problemer", 650.00);
-        // Create an Order and Add it to a Customer
-        System.out.println("\nCreate an Order");
-        Ordrer o1 = facade.createNewOrder();
-        o1.setInvoiceDate(LocalDate.now());
-        o1.setWorkDoneDate(LocalDate.of(2019, Month.SEPTEMBER, 17));
-        o1.setInvoiceID(o1.hashCode());
-        Customer cust = facade.addOrdrerToCustomer(1, o1);
-        System.out.println("Add order to customer: #" + cust.getCustomerID() + " "
-                + cust.getCustomerFirmName() + "," + cust.getCustomerContactName());
-
-        //Create an OrderLine for a specific ItemType, and add it to an Order
-        System.out.println("\nCreating an OrderLine");
-
-        facade.addOrderLineToOrder(o1.getOrdrerID(), 3, 1);              // order#, quantity, itemtype#
+        pdfMaker pdf = new pdfMaker();
+        List<String> orderLineTextList = new ArrayList();
 
 //      Find all Orders, for a specific Customer
         List<Ordrer> oList = facade.getAllOrdersPerCustomer(1);
         System.out.println("\nAll orders from customer #1:");
         double totalPrice = 0;
-        for (Ordrer or : oList) {
-            System.out.println("Order #" + or.getOrdrerID() + " - " + or.getCustomer());
+        Ordrer or = oList.get(0);
+        or.setWorkDoneDate(LocalDate.of(2019, Month.SEPTEMBER, 17));
+        or.setInvoiceDate(LocalDate.of(2019, Month.SEPTEMBER, 21));
+        facade.updateOrder(or.getOrdrerID(), or);
+        System.out.println("Order #" + or.getOrdrerID() + " - " + or.getCustomer());
 
 //      Find the total price of an order   
-            List<OrderLine> ol1List = facade.getTotalOrderPrice(or.getOrdrerID());
-            System.out.println("Orderline price:");
-            for (OrderLine orderLine : ol1List) {
-                int quantity = orderLine.getQuantity();
-                double price = orderLine.getItemType().getPrice();
-                totalPrice += quantity * price;
-                System.out.println(quantity
-                        + " x " + orderLine.getItemType().getName()
-                        + " á " + price + " kr."
-                        + " = " + quantity * price + " kr.");
-            }
-        }
-        System.out.println("Order total price: " + totalPrice + " kr.");
+        List<OrderLine> ol1List = facade.getTotalOrderPrice(or.getOrdrerID());
 
+        System.out.println("Orderline price:");
+        for (OrderLine orderLine : ol1List) {
+            int quantity = orderLine.getQuantity();
+            double price = orderLine.getItemType().getPrice();
+            totalPrice += quantity * price;
+            String text = orderLine.getItemType().getName()
+                    + "                              " + or.getWorkDoneDate()
+                    + "   " + quantity
+                    + "       " + String.format("%.2f", price);
+            orderLineTextList.add(text);
+            orderLineTextList.add(orderLine.getItemType().getDescription());
+            
+            System.out.println(text);
+        }
+
+        System.out.println("Order total price: " + totalPrice + " kr.");
+        pdf.invoicePDFFlow(facade.getMasterData(), orderLineTextList,
+                facade.findCustomer(1), or, totalPrice);
     }
 }
