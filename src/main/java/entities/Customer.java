@@ -21,8 +21,11 @@ public class Customer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer customerID;
-    private String name;
-    private String email;
+    private String customerFirmName;
+    private String customerFirmAddress;
+    private String customerContactName;
+    private String customerContactEmail;
+    private String customerContactPhone;
     
     @OneToMany(mappedBy="customer",cascade = CascadeType.PERSIST)
     private List<Ordrer> ordrers = new ArrayList();
@@ -30,9 +33,12 @@ public class Customer implements Serializable {
     public Customer() {
     }
 
-    public Customer(String name, String email) {
-        this.name = name;
-        this.email = email;
+    public Customer(String customerFirmName, String customerFirmAddress, String customerContactName, String customerContactEmail, String customerContactPhone) {
+        this.customerFirmName = customerFirmName;
+        this.customerFirmAddress = customerFirmAddress;
+        this.customerContactName = customerContactName;
+        this.customerContactEmail = customerContactEmail;
+        this.customerContactPhone = customerContactPhone;
     }
 
     public Integer getCustomerID() {
@@ -43,21 +49,47 @@ public class Customer implements Serializable {
         this.customerID = customerID;
     }
 
-    public String getName() {
-        return name;
+    public String getCustomerFirmName() {
+        return customerFirmName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCustomerFirmName(String customerFirmName) {
+        this.customerFirmName = customerFirmName;
     }
 
-    public String getEmail() {
-        return email;
+    public String getCustomerFirmAddress() {
+        return customerFirmAddress;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setCustomerFirmAddress(String customerFirmAddress) {
+        this.customerFirmAddress = customerFirmAddress;
     }
+
+    public String getCustomerContactName() {
+        return customerContactName;
+    }
+
+    public void setCustomerContactName(String customerContactName) {
+        this.customerContactName = customerContactName;
+    }
+
+    public String getCustomerContactEmail() {
+        return customerContactEmail;
+    }
+
+    public void setCustomerContactEmail(String customerContactEmail) {
+        this.customerContactEmail = customerContactEmail;
+    }
+
+    public String getCustomerContactPhone() {
+        return customerContactPhone;
+    }
+
+    public void setCustomerContactPhone(String customerContactPhone) {
+        this.customerContactPhone = customerContactPhone;
+    }
+
+
 
     public List<Ordrer> getOrdrers() {
         return ordrers;
@@ -72,9 +104,12 @@ public class Customer implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 7;
+        int hash = 5;
+        hash = 71 * hash + Objects.hashCode(this.customerID);
         return hash;
     }
+
+    
 
     @Override
     public boolean equals(Object obj) {
@@ -94,10 +129,11 @@ public class Customer implements Serializable {
         return true;
     }
 
-      
     @Override
     public String toString() {
-        return "Customer{" + "customerID=" + customerID + ", name=" + name + ", email=" + email + ", ordrers=" + ordrers + '}';
+        return "Customer{" + "customerID=" + customerID + ", customerFirmName=" + customerFirmName + ", customerFirmAddress=" + customerFirmAddress + ", customerContactName=" + customerContactName + ", customerContactEmail=" + customerContactEmail + ", customerContactPhone=" + customerContactPhone + ", ordrers=" + ordrers + '}';
     }
+
+ 
 
 }

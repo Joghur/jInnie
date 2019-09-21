@@ -1,6 +1,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,12 +18,15 @@ import javax.persistence.OneToMany;
 
 @Entity
 @NamedQuery(name = "Ordrer.deleteAllRows", query = "DELETE from Ordrer")
-public class Ordrer implements Serializable {
+public class Ordrer implements Serializable { //spelled like that to avoid possible DB mixup. Order is reserved
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer ordrerID;
+    
+    private Integer invoiceID;
+    private LocalDate invoiceDate;
 
     @OneToMany(mappedBy = "ordrer", cascade = CascadeType.PERSIST)
     private List<OrderLine> orderLines = new ArrayList();
@@ -50,6 +54,22 @@ public class Ordrer implements Serializable {
         this.customer = customer;
     }
 
+    public Integer getInvoiceID() {
+        return invoiceID;
+    }
+
+    public void setInvoiceID(Integer invoiceID) {
+        this.invoiceID = invoiceID;
+    }
+
+    public LocalDate getInvoiceDate() {
+        return invoiceDate;
+    }
+
+    public void setInvoiceDate(LocalDate invoiceDate) {
+        this.invoiceDate = invoiceDate;
+    }
+
     public List<OrderLine> getOrderLines() {
         return orderLines;
     }
@@ -63,7 +83,12 @@ public class Ordrer implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 7;
+        int hash = 3;
+        hash = 71 * hash + Objects.hashCode(this.ordrerID);
+        hash = 71 * hash + Objects.hashCode(this.invoiceID);
+        hash = 71 * hash + Objects.hashCode(this.invoiceDate);
+        hash = 71 * hash + Objects.hashCode(this.orderLines);
+        hash = 71 * hash + Objects.hashCode(this.customer);
         return hash;
     }
 
@@ -87,7 +112,8 @@ public class Ordrer implements Serializable {
 
     @Override
     public String toString() {
-        return "Ordrer{" + "ordrerID=" + ordrerID + ", orderLines=" + orderLines + ", customer=" + customer + '}';
+        return "Ordrer{" + "ordrerID=" + ordrerID + ", invoiceID=" + invoiceID + ", invoiceDate=" + invoiceDate + ", orderLines=" + orderLines + ", customer=" + customer + '}';
     }
+
 
 }

@@ -43,8 +43,8 @@ public class TheFacade {
     /**
      * CUSTOMERS
      */
-    public Customer addCustomer(String name, String email) {
-        Customer c = new Customer(name, email);
+    public Customer addCustomer(String customerFirmName, String customerFirmAddress, String customerContactName, String customerContactEmail, String customerContactPhone) {
+        Customer c = new Customer(customerFirmName, customerFirmAddress, customerContactName, customerContactEmail, customerContactPhone);
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
@@ -196,76 +196,6 @@ public class TheFacade {
         } finally {
             em.close();
         }
-    }
-
-    public static void main(String[] args) {
-        emf = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.DROP_AND_CREATE);
-        TheFacade facade = TheFacade.getTheFacade(emf);
-
-        // Adding customers
-        System.out.println("\nAdding customers");
-        facade.addCustomer("Hans Jørgensen", "hans@email.com");
-        facade.addCustomer("Marianne Jørgensen", "marianne@email.com");
-        facade.addCustomer("Jens Hansen", "jens@email.com");
-        facade.addCustomer("Trine Jensen", "trine@email.com");
-
-        // Finding a customer
-        System.out.println("\nFinding customer #2:\n"
-                + facade.findCustomer(2));
-
-        //Finding all customers
-        System.out.println("\nGetting all customers:");
-        for (Customer allCustomer : facade.getAllCustomers()) {
-            System.out.println(allCustomer);
-        }
-
-        // Adding itemtypes
-        System.out.println("\nAdding itemtypes");
-        facade.addItemType("Blå maling", "Det er blåt og flydende", 500.50);
-        facade.addItemType("Rød maling", "Det er rødt og flydende", 510.50);
-        facade.addItemType("Gul maling", "Det er gult og flydende", 400.50);
-        facade.addItemType("Grøn maling", "Det er grønt og der er klumper i", 475.50);
-
-        // Finding an itemtype
-        System.out.println("\nFinding itemtype #3:\n"
-                + facade.findItemType(3));
-
-        // Create an Order and Add it to a Customer
-        System.out.println("\nCreate an Order");
-        Ordrer o1 = new Ordrer();
-        Customer cust = facade.addOrdrerToCustomer(1, o1);
-        System.out.println("Add order to customer: #" + cust.getCustomerID() + " "
-                + cust.getName());
-
-        //Create an OrderLine for a specific ItemType, and add it to an Order
-        System.out.println("\nCreating an OrderLine");
-
-        facade.addOrderLineToOrder(1, 4, 2);              // order#, quantity, itemtype#
-        facade.addOrderLineToOrder(1, 2, 1);              // Ordrer/itemtype using madeup numbers to save time
-        facade.addOrderLineToOrder(1, 5, 4);
-
-//      Find all Orders, for a specific Customer
-        List<Ordrer> oList = facade.getAllOrdersPerCustomer(1);
-        System.out.println("\nAll orders from customer #1:");
-        double totalPrice = 0;
-        for (Ordrer or : oList) {
-            System.out.println("Order #" + or.getOrdrerID() + " - " + or.getCustomer());
-
-//      Find the total price of an order   
-            List<OrderLine> ol1List = facade.getTotalOrderPrice(or.getOrdrerID());
-            System.out.println("Orderline price:");
-            for (OrderLine orderLine : ol1List) {
-                int quantity = orderLine.getQuantity();
-                double price = orderLine.getItemType().getPrice();
-                totalPrice += quantity * price;
-                System.out.println(quantity
-                        + " x " + orderLine.getItemType().getName()
-                        + " á " + price + " kr."
-                        + " = " + quantity * price + " kr.");
-            }
-        }
-        System.out.println("Order total price: " + totalPrice + " kr.");
-
     }
 
 }
