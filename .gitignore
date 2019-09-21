@@ -1,2 +1,13 @@
 
-target/
+nb-configuration.xml
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+target
+.idea
+*.iml
+/nbproject/
