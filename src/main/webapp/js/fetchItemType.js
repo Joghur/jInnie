@@ -4,16 +4,15 @@
 
 //constants
 //const CONTENTDIV = document.querySelector("#content");
-const orderAPI = "/jinnie/api/order/all";
 
 /**
  * Making table of all cars. Sorts and filters after which choices has been made
  */
-function getAllOrders(ev) {
+function getAllItemTypes(ev) {
     ev.preventDefault();
     console.log(ev.target.innerText);
 
-    fetch(orderAPI)
+    fetch("/jinnie/api/itemtype/all")
             .then(res => res.json())
             .then(data => {
 
@@ -205,6 +204,6 @@ function insertForms() {
 
 //Cars button eventlistener and other DOM manipulations
 //document.querySelector("#carPage").addEventListener("click", insertForms);
-document.querySelector("#orderPage").addEventListener("click", getAllOrders);
+document.querySelector("#itemTypePage").addEventListener("click", getAllItemTypes);
 
 

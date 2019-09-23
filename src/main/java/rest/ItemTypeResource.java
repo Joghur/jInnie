@@ -2,7 +2,9 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dto.ItemTypeDTO;
 import dto.OrderDTO;
+import entities.ItemType;
 import entities.Ordrer;
 import facades.TheFacade;
 import java.util.ArrayList;
@@ -18,8 +20,8 @@ import javax.ws.rs.core.MediaType;
  *
  * @author martin
  */
-@Path("order")
-public class OrderResource {
+@Path("itemtype")
+public class ItemTypeResource {
 
     private static final EntityManagerFactory EMF = EMF_Creator
             .createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
@@ -36,10 +38,10 @@ public class OrderResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String getAllOrders() {
-        List<Ordrer> list = FACADE.findAllOrders();
-        List<OrderDTO> dtoList = new ArrayList();
-        for (Ordrer ordrer : list) {
-            dtoList.add(new OrderDTO(ordrer));
+        List<ItemType> list = FACADE.findAllItemTypes();
+        List<ItemTypeDTO> dtoList = new ArrayList();
+        for (ItemType object : list) {
+            dtoList.add(new ItemTypeDTO(object));
         }
         return GSON.toJson(dtoList);
     }

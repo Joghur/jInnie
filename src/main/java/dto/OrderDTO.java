@@ -3,6 +3,7 @@ package dto;
 import entities.Ordrer;
 import enumeration.OrderState;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -12,15 +13,16 @@ public class OrderDTO {
 
     private Integer ordrerID;
     private Integer invoiceID;
-    private LocalDate invoiceDate;
-    private LocalDate workDoneDate;
+    private String invoiceDate;
+    private String workDoneDate;
     private OrderState orderState;;
 
     public OrderDTO(Ordrer m) {
         this.ordrerID = m.getOrdrerID();
         this.invoiceID = m.getInvoiceID();
-        this.invoiceDate = m.getInvoiceDate();
-        this.workDoneDate = m.getWorkDoneDate();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/LLL-yyyy");
+        this.invoiceDate = m.getInvoiceDate().format(formatter);
+        this.workDoneDate = m.getWorkDoneDate().format(formatter);
         this.orderState = m.getOrderState();
     }
 
@@ -40,19 +42,19 @@ public class OrderDTO {
         this.invoiceID = invoiceID;
     }
 
-    public LocalDate getInvoiceDate() {
+    public String getInvoiceDate() {
         return invoiceDate;
     }
 
-    public void setInvoiceDate(LocalDate invoiceDate) {
+    public void setInvoiceDate(String invoiceDate) {
         this.invoiceDate = invoiceDate;
     }
 
-    public LocalDate getWorkDoneDate() {
+    public String getWorkDoneDate() {
         return workDoneDate;
     }
 
-    public void setWorkDoneDate(LocalDate workDoneDate) {
+    public void setWorkDoneDate(String workDoneDate) {
         this.workDoneDate = workDoneDate;
     }
 

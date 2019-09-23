@@ -9,12 +9,18 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
-
 @Entity
-@NamedQuery(name = "ItemType.deleteAllRows", query = "DELETE from ItemType")
+@NamedQueries({
+    @NamedQuery(name = "ItemType.deleteAllRows", query = "DELETE from ItemType"),
+    @NamedQuery(name = "ItemType.findAll", query = "SELECT s FROM ItemType s"),
+    @NamedQuery(name = "ItemType.findItemTypeID", query = "SELECT s FROM ItemType s WHERE s.itemTypeID = :itemTypeID"),
+    @NamedQuery(name = "ItemType.findName", query = "SELECT s FROM ItemType s WHERE s.name = :name"),
+    @NamedQuery(name = "ItemType.findDescription", query = "SELECT s FROM ItemType s WHERE s.description = :description"),
+    @NamedQuery(name = "ItemType.findPrice", query = "SELECT s FROM ItemType s WHERE s.price = :price")})
 public class ItemType implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -24,10 +30,10 @@ public class ItemType implements Serializable {
     private String name;
     private String description;
     private double price;
-    
-    @OneToMany(mappedBy = "itemType",cascade = CascadeType.PERSIST)
+
+    @OneToMany(mappedBy = "itemType", cascade = CascadeType.PERSIST)
     private List<OrderLine> orderLines = new ArrayList();
-    
+
     public ItemType() {
     }
 
@@ -93,10 +99,9 @@ public class ItemType implements Serializable {
         return true;
     }
 
-    
     @Override
     public String toString() {
         return "ItemType{" + "itemTypeID=" + itemTypeID + ", name=" + name + ", description=" + description + ", price=" + price + ", orderLines=" + orderLines + '}';
     }
-   
+
 }
