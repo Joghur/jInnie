@@ -49,7 +49,7 @@ public class TheFacade {
     /**
      * CUSTOMERS
      */
-    public Customer addCustomer(String customerFirmName, String customerFirmAddress, String customerContactName, String customerContactEmail, String customerContactPhone) {
+    public Customer createCustomer(String customerFirmName, String customerFirmAddress, String customerContactName, String customerContactEmail, String customerContactPhone) {
         Customer c = new Customer(customerFirmName, customerFirmAddress, customerContactName, customerContactEmail, customerContactPhone);
         EntityManager em = emf.createEntityManager();
         try {
@@ -72,7 +72,7 @@ public class TheFacade {
         }
     }
 
-    public List<Customer> getAllCustomers() {
+    public List<Customer> findAllCustomers() {
         EntityManager em = emf.createEntityManager();
         try {
             TypedQuery<Customer> num = em.createQuery("Select c from Customer c", Customer.class);
@@ -108,7 +108,7 @@ public class TheFacade {
         }
     }
 
-    public List<ItemType> getAllItemTypes() {
+    public List<ItemType> findAllItemTypes() {
         EntityManager em = emf.createEntityManager();
         try {
             TypedQuery<ItemType> num = em.createQuery("Select c from ItemType c", ItemType.class);
@@ -207,6 +207,21 @@ public class TheFacade {
 
     /**
      * ORD(R)ERS
+     *
+     * @return List<Ordrer> List of all order objects
+     */
+    public List<Ordrer> findAllOrders() {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<Ordrer> query = em.createNamedQuery("Ordrer.findAll", Ordrer.class);
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    /**
+     * ORD(R)ERS
      */
     public Ordrer findOrdrer(int id) {
         EntityManager em = emf.createEntityManager();
@@ -242,7 +257,7 @@ public class TheFacade {
     /**
      * Find all Orders, for a specific Customer
      */
-    public List<Ordrer> getAllOrdersPerCustomer(int customerID) {
+    public List<Ordrer> findAllOrdersPerCustomer(int customerID) {
         EntityManager em = emf.createEntityManager();
         try {
             TypedQuery<Ordrer> num
@@ -258,7 +273,7 @@ public class TheFacade {
     /**
      * Find the total price of an order
      */
-    public List<OrderLine> getTotalOrderPrice(int orderID) {
+    public List<OrderLine> findTotalOrderPrice(int orderID) {
         EntityManager em = emf.createEntityManager();
         try {
             TypedQuery<OrderLine> num
@@ -276,8 +291,9 @@ public class TheFacade {
 
     public static void main(String[] args) throws IOException {
         emf = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
-        TheFacade facade =   TheFacade.getTheFacade(emf);
-
+        TheFacade facade = TheFacade.getTheFacade(emf);
+        System.out.println("Finding all orders:");
+        System.out.println(facade.findAllOrders());
 
     }
 }

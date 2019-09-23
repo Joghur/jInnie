@@ -10,11 +10,21 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 @Entity
-@NamedQuery(name = "Customer.deleteAllRows", query = "DELETE from Customer")
+@NamedQueries({
+    @NamedQuery(name = "Customer.deleteAllRows", query = "DELETE from Customer"),
+    @NamedQuery(name = "Customer.findAll", query = "SELECT s FROM Customer s"),
+    @NamedQuery(name = "Customer.findCustomerID", query = "SELECT s FROM Customer s WHERE s.customerID = :customerID"),
+    @NamedQuery(name = "Customer.findCustomerNumber", query = "SELECT s FROM Customer s WHERE s.customerNumber = :customerNumber"),
+    @NamedQuery(name = "Customer.findCustomerFirmName", query = "SELECT s FROM Customer s WHERE s.customerFirmName = :customerFirmName"),
+    @NamedQuery(name = "Customer.findCustomerFirmAddress", query = "SELECT s FROM Customer s WHERE s.customerFirmAddress = :customerFirmAddress"),
+    @NamedQuery(name = "Customer.findCustomerContactName", query = "SELECT s FROM Customer s WHERE s.customerContactName = :customerContactName"),
+    @NamedQuery(name = "Customer.findCustomerContactEmail", query = "SELECT s FROM Customer s WHERE s.customerContactEmail = :customerContactEmail"),
+    @NamedQuery(name = "Customer.findCustomerContactPhone", query = "SELECT s FROM Customer s WHERE s.customerContactPhone = :customerContactPhone")})
 public class Customer implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -122,7 +132,6 @@ public class Customer implements Serializable {
         hash = 71 * hash + Objects.hashCode(this.customerContactPhone);
         return hash;
     }
-
 
     @Override
     public boolean equals(Object obj) {

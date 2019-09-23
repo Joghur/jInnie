@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -15,18 +14,26 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 @Entity
-@NamedQuery(name = "Ordrer.deleteAllRows", query = "DELETE from Ordrer")
+@NamedQueries({
+    @NamedQuery(name = "Ordrer.deleteAllRows", query = "DELETE from Ordrer"),
+    @NamedQuery(name = "Ordrer.findAll", query = "SELECT s FROM Ordrer s"),
+    @NamedQuery(name = "Ordrer.findOrdrerID", query = "SELECT s FROM Ordrer s WHERE s.ordrerID = :ordrerID"),
+    @NamedQuery(name = "Ordrer.findInvoiceID", query = "SELECT s FROM Ordrer s WHERE s.invoiceID = :invoiceID"),
+    @NamedQuery(name = "Ordrer.findInvoiceDate", query = "SELECT s FROM Ordrer s WHERE s.invoiceDate = :invoiceDate"),
+    @NamedQuery(name = "Ordrer.findWorkDoneDate", query = "SELECT s FROM Ordrer s WHERE s.workDoneDate = :workDoneDate"),
+    @NamedQuery(name = "Ordrer.findOrderState", query = "SELECT s FROM Ordrer s WHERE s.orderState = :orderState")})
 public class Ordrer implements Serializable { //spelled like that to avoid possible DB mixup. Order is reserved
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer ordrerID;
-    
+
     private Integer invoiceID;
     private LocalDate invoiceDate;
     private LocalDate workDoneDate;
@@ -92,7 +99,7 @@ public class Ordrer implements Serializable { //spelled like that to avoid possi
     public void setOrderState(OrderState orderState) {
         this.orderState = orderState;
     }
-    
+
     public List<OrderLine> getOrderLines() {
         return orderLines;
     }
@@ -111,7 +118,6 @@ public class Ordrer implements Serializable { //spelled like that to avoid possi
         hash = 97 * hash + Objects.hashCode(this.customer);
         return hash;
     }
-
 
     @Override
     public boolean equals(Object obj) {
@@ -135,7 +141,5 @@ public class Ordrer implements Serializable { //spelled like that to avoid possi
     public String toString() {
         return "Ordrer{" + "ordrerID=" + ordrerID + ", invoiceID=" + invoiceID + ", invoiceDate=" + invoiceDate + ", workDoneDate=" + workDoneDate + ", orderState=" + orderState + ", orderLines=" + orderLines + ", customer=" + customer + '}';
     }
-
-
 
 }
