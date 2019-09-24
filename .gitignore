@@ -7,6 +7,7 @@ nb-configuration.xml
 *.war
 *.ear
 
+*.pdf
 target
 .idea
 *.iml
