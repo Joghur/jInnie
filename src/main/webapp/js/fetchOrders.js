@@ -14,40 +14,53 @@ function getAllOrders(ev) {
     console.log(ev.target.innerText);
 
     fetch(orderAPI)
-            .then(res => res.json())
-            .then(data => {
+        .then(res => res.json())
+        .then(data => {
 
-                //sorting arrays
-//                sorting(ev, data);
+            //sorting arrays
+            //                sorting(ev, data);
 
-                // filtering
-//                data = filtering(data);
+            // filtering
+            //                data = filtering(data);
 
-                /**
-                 * jsonList2Table() is in tables.js
-                 * It converts a json-list into a html table
-                 * arguments: a jsonlist and the tag identifier
-                 */
-                console.log("data before table.js: " + data +
-                        "\ntypeof data: " + typeof data);
-                if (typeof data !== 'undefined' && data.length > 0) {
-                    jsonList2Table(data, "#content");
-                } else {
-                    var tableElement = CONTENTDIV.querySelector("table");
-                    if (tableElement !== null) {
-                        CONTENTDIV.querySelector("table").remove();
-                    }
-                    alert("\n\nNo data left!");
+            /**
+             * jsonList2Table() is in tables.js
+             * It converts a json-list into a html table
+             * arguments: a jsonlist and the tag identifier
+             */
+            console.log("data before table.js: " + data +
+                "\ntypeof data: " + typeof data);
+            if (typeof data !== 'undefined' && data.length > 0) {
+                list2Table(data, "#content");
+                linking("#content");
+            } else {
+                var tableElement = CONTENTDIV.querySelector("table");
+                if (tableElement !== null) {
+                    CONTENTDIV.querySelector("table").remove();
                 }
+                alert("\n\nNo data left!");
+            }
 
-                //For small screens
-                CONTENTDIV.classList.add("table-responsive");
+            //For small screens
+            // CONTENTDIV.classList.add("table-responsive");
 
-                //Events needs to be added after the table has been written
-                //also changes headliners
-//                addEvents();
-            });
-}
+            //Events needs to be added after the table has been written
+            //also changes headliners
+            //                addEvents();
+
+            insertNowModal(); // new or edit overlay
+        });
+};
+
+/**
+ * new or edit overlay
+ */
+function insertNowModal() {
+
+    $.get("neworder.html", {}, function (results) {
+        $("#content").append(results);
+    });
+};
 
 /**
  * Sort the data array after which column has been pressed
@@ -90,13 +103,13 @@ function filtering(data) {
 
     //input checks
     if (beforeYearInput < afterYearInput
-            && afterYearInput !== "" && beforeYearInput !== "") {
+        && afterYearInput !== "" && beforeYearInput !== "") {
         alert("'Before year' has to be higher than 'After year'!");
         return;
     }
 
     if (priceLessInput < priceMoreInput
-            && priceMoreInput !== "" && priceLessInput !== "") {
+        && priceMoreInput !== "" && priceLessInput !== "") {
         alert("'Price less..' has to be higher than 'Price more..'!");
         return;
     }
@@ -204,7 +217,6 @@ function insertForms() {
 }
 
 //Cars button eventlistener and other DOM manipulations
-//document.querySelector("#carPage").addEventListener("click", insertForms);
 document.querySelector("#orderPage").addEventListener("click", getAllOrders);
 
 
