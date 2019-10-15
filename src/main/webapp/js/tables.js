@@ -3,8 +3,8 @@
  * and places it at the html tag position
  * arguments: a jsonlist and the tag identifier
  */
-function list2Table(jsonList, htmlTag) {
-    console.log("iiuj");
+function list2Table(jsonList, htmlTag, keyList) {
+    console.log("list2Table");
     //Create a HTML Table element.
     var table = document.createElement("TABLE");
 
@@ -15,9 +15,18 @@ function list2Table(jsonList, htmlTag) {
     var row = table.insertRow(-1);
 
     //insert header cell elements
-    // it uses the first entry to get object properties
-    Object.keys(jsonList[0]).forEach(function (item) {
-//        console.log("item: " + item);
+    console.log("keyList", keyList);
+    if (keyList === undefined) {
+        // it uses the first entry to get object properties
+        console.log("keysList = []", keyList);
+        keys = Object.keys(jsonList[0]);
+    } else {
+        // using list of keys provided
+        console.log("keys, else", keyList);
+        keys = keyList;
+    }
+    keys.forEach(function (item) {
+        console.log("item: " + item);
         var headerCell = document.createElement("TH");
 
         //create id for header. ID is the same as the content
@@ -28,17 +37,29 @@ function list2Table(jsonList, htmlTag) {
     });
 
     //Add the data rows.
-    jsonList.forEach(function (listItem, index) {
-//        console.log("listItem.carID: " + listItem.carID);
-
-        row = table.insertRow(-1);
-        Object.keys(listItem).forEach(function (parts) {
-//            console.log("listItem[parts]: " + listItem[parts]);
-            var cell = row.insertCell(-1);
-            var text = document.createTextNode(listItem[parts]);
-            cell.appendChild(text);
+    if (keyList === undefined) {
+        jsonList.forEach(function (listItem, index) {
+            row = table.insertRow(-1);
+            Object.keys(listItem).forEach(function (parts) {
+//                console.log("listItem[parts]: " + listItem[parts]);
+                var cell = row.insertCell(-1);
+                var text = document.createTextNode(listItem[parts]);
+                cell.appendChild(text);
+            });
         });
-    });
+    } else {
+        jsonList.forEach(function (listItem, index) {
+            row = table.insertRow(-1);
+            keyList.forEach(function (parts) {
+//                console.log("parts", parts);
+//                console.log("listItem[parts]: " + listItem[parts]);
+                var cell = row.insertCell(-1);
+                var text = document.createTextNode(listItem[parts]);
+                cell.appendChild(text);
+            });
+        });
+
+    }
 
     var divTable = document.querySelector(htmlTag);
     if (divTable.contains(document.querySelector("table"))) {
@@ -47,7 +68,8 @@ function list2Table(jsonList, htmlTag) {
     } else {
         divTable.appendChild(table);
     }
-};
+}
+;
 
 /**
  * 
@@ -61,7 +83,6 @@ function linking(htmlTag) {
 
             //first column of row = id
             var rowID = element.querySelector(":first-Child").innerHTML;
-            // console.log("rowID", rowID);
 
             //creating delete link
             var cell = element.insertCell(-1);
@@ -74,20 +95,21 @@ function linking(htmlTag) {
             cell.appendChild(deleteLinkNode);
 
             //creating edit link
-            cell = element.insertCell(-1);
-            var editLinkNode = document.createElement("a");
-            editLinkNode.setAttribute("href", "#");
-            editLinkNode.setAttribute("class", "btnedit");
-            editLinkNode.setAttribute("id", rowID);
-            var editText = document.createTextNode("edit");
-            editLinkNode.appendChild(editText);
-            cell.appendChild(editLinkNode);
+//            cell = element.insertCell(-1);
+//            var editLinkNode = document.createElement("a");
+//            editLinkNode.setAttribute("href", "#");
+//            editLinkNode.setAttribute("class", "btnedit");
+//            editLinkNode.setAttribute("id", rowID);
+//            var editText = document.createTextNode("edit");
+//            editLinkNode.appendChild(editText);
+//            cell.appendChild(editLinkNode);
         }
     });
 
     //adding eventlistener to table body
     document.querySelector(htmlTag).addEventListener("click", tableEvents);
-};
+}
+;
 
 
 /**
@@ -98,14 +120,24 @@ function tableEvents(e) {
     console.log("e.target", e.target);
     var method = e.target.parentElement.querySelector(":first-child").innerHTML;
     var id = e.target.parentElement.querySelector(":link").id;
-
+    var section = $("tbody:first-child tr th").html();
     console.log("method", method);
     console.log("id", id);
+    console.log("section", section);
 
     if (method === "delete") {
         if (confirm('Are you sure you want to delete?')) {
-            // deleteFunc(id);
-            // getFunc();
+            console.log("id", id);
+            switch (section) {
+                case "itemTypeID":
+                    deleteItemtypeFunc(id);
+                    break;
+                case "customerID":
+                    deleteCustomerFunc(id);
+                    break;
+                default:
+                // code block
+            }
             console.log("OK");
         } else {
             console.log("Cancel");
@@ -113,6 +145,6 @@ function tableEvents(e) {
         }
     }
     if (method === "edit") {
-        getFunc();
     }
-};
+}
+;

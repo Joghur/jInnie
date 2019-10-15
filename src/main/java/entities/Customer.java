@@ -51,7 +51,7 @@ public class Customer implements Serializable {
         this.customerContactName = customerContactName;
         this.customerContactEmail = customerContactEmail;
         this.customerContactPhone = customerContactPhone;
-        this.customerNumber = this.hashCode();
+        this.customerNumber = Integer.parseInt(customerContactPhone);
     }
 
     public Integer getCustomerID() {

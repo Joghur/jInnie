@@ -1,5 +1,6 @@
 package facades;
 
+import dto.ItemTypeDTO;
 import entities.Customer;
 import entities.ItemType;
 import entities.MasterData;
@@ -85,14 +86,14 @@ public class TheFacade {
     /**
      * ITEMTYPES
      */
-    public ItemType addItemType(String name, String description, double price) {
+    public ItemTypeDTO addItemType(String name, String description, float price) {
         ItemType c = new ItemType(name, description, price);
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
             em.persist(c);
             em.getTransaction().commit();
-            return c;
+            return new ItemTypeDTO(c);
         } finally {
             em.close();
         }

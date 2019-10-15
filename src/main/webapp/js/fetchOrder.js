@@ -1,10 +1,10 @@
 /**
  * GET
  */
-function getAllCustomers() {
+function getAllOrders() {
     console.log("get function");
 
-    fetch("/jinnie/api/customer/all")
+    fetch("/jinnie/api/order/all")
             .then(res => res.json())
             .then(data => {
                 console.log("data: ", data)
@@ -16,13 +16,13 @@ function getAllCustomers() {
                 console.log("data before table.js: " + data +
                         "\ntypeof data: " + typeof data);
                 var keyList = [
+                    "ordrerID",
+                    "invoiceID",
                     "customerID",
-                    "customerNumber",
-                    "customerFirmName",
-                    "customerFirmAddress",
-                    "customerContactName",
-                    "customerContactEmail",
-                    "customerContactPhone"
+                    "invoiceDate",
+                    "workDoneDate",
+                    "orderState",
+                    "orderLines"
                 ];
                 if (typeof data !== 'undefined' && data.length > 0) {
                     list2Table(data, "#content", keyList);
@@ -34,14 +34,14 @@ function getAllCustomers() {
                     }
                     alert("\n\nNo data left!");
                 }
-                insertNewCustomerModal(); // new overlay
+                insertNewOrderModal(); // new overlay
             });
 }
 
 /**
  * POST
  */
-function postNewCustomerFunc(e) {
+function postNewOrderFunc(e) {
     console.log("post function");
     var customerFirmName = document.querySelector("#newCustomerFirmName").value;
     var customerFirmAddress = document.querySelector("#newCustomerFirmAddress").value;
@@ -69,14 +69,14 @@ function postNewCustomerFunc(e) {
         })
     };
     console.log("options", options);
-    fetch("/jinnie/api/customer/new", options);
-    getAllCustomers();
+    fetch("/jinnie/api/order/new", options);
+    getAllOrders();
 }
 
 /**
  * DELETE
  */
-function deleteCustomerFunc(id) {
+function deleteOrderFunc(id) {
     console.log("delete function");
     let options = {
         method: "DELETE",
@@ -84,20 +84,20 @@ function deleteCustomerFunc(id) {
             'Content-Type': 'application/json'
         }
     };
-    fetch("/jinnie/api/customer/" + id, options);
-    getAllCustomers();
+    fetch("/jinnie/api/order/" + id, options);
+    getAllOrders();
 }
 
 /**
  * new or edit overlay
  */
-function insertNewCustomerModal() {
+function insertNewOrderModal() {
 
-    $.get("html/newcustomer.html", {}, function (results) {
+    $.get("html/neworder.html", {}, function (results) {
         $("#newButton").html(results);
     });
 }
 
-document.querySelector("#customerPage").addEventListener("click", getAllCustomers);
+document.querySelector("#orderPage").addEventListener("click", getAllOrders);
 
 

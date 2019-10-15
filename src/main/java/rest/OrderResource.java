@@ -1,17 +1,25 @@
 package rest;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import dto.OrderDTO;
+import entities.Customer;
 import entities.Ordrer;
-import facades.TheFacade;
+import facades.CustomerFacade;
+import facades.OrderFacade;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import utils.EMF_Creator;
 import javax.persistence.EntityManagerFactory;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -23,45 +31,54 @@ public class OrderResource {
 
     private static final EntityManagerFactory EMF = EMF_Creator
             .createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
-    private static final TheFacade FACADE = TheFacade.getTheFacade(EMF);
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final OrderFacade FACADE = OrderFacade.getOrderFacade(EMF);
+    private static final CustomerFacade CUSTFACADE = CustomerFacade.getCustomerFacade(EMF);
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String demo() {
-        return "{\"msg\":\"Hello World\"}";
+        return "{\"msg\":\"Hello Order\"}";
     }
 
     @Path("all")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String getAllOrders() {
+    public List<OrderDTO> getAllOrders() {
         List<Ordrer> list = FACADE.findAllOrders();
         List<OrderDTO> dtoList = new ArrayList();
-        for (Ordrer ordrer : list) {
-            dtoList.add(new OrderDTO(ordrer));
+        for (Ordrer object : list) {
+            dtoList.add(new OrderDTO(object));
         }
-        return GSON.toJson(dtoList);
+        return dtoList;
     }
 
-//    @Path("count")
-//    @GET
-//    public String getCarsCount() {
-//        long count = FACADE.getCarsCount();
-//        System.out.println("--------------->" + count);
-//        return "{\"count\":" + count + "}";  //Done manually so no need for a DTO
-//    }
-//    @Path("fill")
-//    @GET
-//    @Produces({MediaType.APPLICATION_JSON})
-//    public String getCarsPerTitle() {
-//        FACADE.addCar(1976, "Toyota", "Corolla", 2000, LocalDate.of(2015, 12, 31), "Frederik", "Der er en ridse i lakken");
-//        FACADE.addCar(1985, "VW", "Polo", 2000, LocalDate.of(2013, 5, 1), "Frederik", "Der er en ridse i lakken");
-//        FACADE.addCar(2012, "Volvo", "Corolla", 10000, LocalDate.of(2015, 9, 22), "Frederik", "Der er en ridse i lakken");
-//        FACADE.addCar(1995, "VW", "Golf", 10000, LocalDate.of(2016, 1, 10), "Frederik", "Der er en ridse i lakken");
-//        FACADE.addCar(2010, "Toyota", "Aygo", 12542, LocalDate.of(2015, 5, 12), "Frederik", "Der er en ridse i lakken");
-//        FACADE.addCar(2015, "Toyota", "Corolla", 210500, LocalDate.of(2017, 9, 25), "Frederik", "Der er en ridse i lakken");
-//        FACADE.addCar(2009, "Volvo", "180", 100000, LocalDate.of(2018, 5, 10), "Frederik", "Der er en ridse i lakken");
-//        return GSON.toJson("Database filled");
-//    }
+    //@POST
+    @Path("new")
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public OrderDTO createOrder(OrderDTO o) {
+        Customer c = CUSTFACADE.findCustomer(o.getCustomerID());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/LLL-yyyy");
+        LocalDate localDate = LocalDate.parse(o.getWorkDoneDate(), formatter);
+        return FACADE.createOrder(localDate, c, o.getOrderLines());
+    }
+
+    //@PUT
+    @PUT
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("{id}")
+    public OrderDTO editOrder(OrderDTO changedOrder, @PathParam("id") int id) throws WebApplicationException {
+        return FACADE.editOrder(id, changedOrder);
+    }
+
+    //@DELETE
+    @DELETE
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("{id}")
+    public String deleteOrder(@PathParam("id") int id) throws WebApplicationException {
+        FACADE.deleteOrder(id);
+        return "{\"Status\":\"Order deleted\"}";
+    }
 }

@@ -1,7 +1,5 @@
 package rest;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import dto.CustomerDTO;
 import entities.Customer;
 import facades.CustomerFacade;
@@ -9,9 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 import utils.EMF_Creator;
 import javax.persistence.EntityManagerFactory;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -24,44 +28,55 @@ public class CustomerResource {
     private static final EntityManagerFactory EMF = EMF_Creator
             .createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
     private static final CustomerFacade FACADE = CustomerFacade.getCustomerFacade(EMF);
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String demo() {
-        return "{\"msg\":\"Hello World\"}";
+        return "{\"msg\":\"Hello customer\"}";
     }
 
     @Path("all")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String getAllOrders() {
+    public List<CustomerDTO> getAllCustomers() {
         List<Customer> list = FACADE.findAllCustomers();
         List<CustomerDTO> dtoList = new ArrayList();
         for (Customer object : list) {
             dtoList.add(new CustomerDTO(object));
         }
-        return GSON.toJson(dtoList);
+        return dtoList;
     }
 
-//    @Path("count")
-//    @GET
-//    public String getCarsCount() {
-//        long count = FACADE.getCarsCount();
-//        System.out.println("--------------->" + count);
-//        return "{\"count\":" + count + "}";  //Done manually so no need for a DTO
-//    }
-//    @Path("fill")
-//    @GET
-//    @Produces({MediaType.APPLICATION_JSON})
-//    public String getCarsPerTitle() {
-//        FACADE.addCar(1976, "Toyota", "Corolla", 2000, LocalDate.of(2015, 12, 31), "Frederik", "Der er en ridse i lakken");
-//        FACADE.addCar(1985, "VW", "Polo", 2000, LocalDate.of(2013, 5, 1), "Frederik", "Der er en ridse i lakken");
-//        FACADE.addCar(2012, "Volvo", "Corolla", 10000, LocalDate.of(2015, 9, 22), "Frederik", "Der er en ridse i lakken");
-//        FACADE.addCar(1995, "VW", "Golf", 10000, LocalDate.of(2016, 1, 10), "Frederik", "Der er en ridse i lakken");
-//        FACADE.addCar(2010, "Toyota", "Aygo", 12542, LocalDate.of(2015, 5, 12), "Frederik", "Der er en ridse i lakken");
-//        FACADE.addCar(2015, "Toyota", "Corolla", 210500, LocalDate.of(2017, 9, 25), "Frederik", "Der er en ridse i lakken");
-//        FACADE.addCar(2009, "Volvo", "180", 100000, LocalDate.of(2018, 5, 10), "Frederik", "Der er en ridse i lakken");
-//        return GSON.toJson("Database filled");
-//    }
+    //@POST
+    @Path("new")
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public CustomerDTO createItemType(CustomerDTO item) {
+        return FACADE.createCustomer(
+                item.getCustomerFirmName(),
+                item.getCustomerFirmAddress(),
+                item.getCustomerContactName(),
+                item.getCustomerContactEmail(),
+                item.getCustomerContactPhone()
+        );
+    }
+
+    //@PUT
+    @PUT
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("{id}")
+    public CustomerDTO editCustomer(CustomerDTO changedItem, @PathParam("id") int id) throws WebApplicationException {
+        return FACADE.editCustomer(id, changedItem);
+    }
+
+    //@DELETE
+    @DELETE
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("{id}")
+    public String deleteCustomer(@PathParam("id") int id) throws WebApplicationException {
+        FACADE.deleteCustomer(id);
+        return "{\"Status\":\"Customer deleted\"}";
+    }
 }

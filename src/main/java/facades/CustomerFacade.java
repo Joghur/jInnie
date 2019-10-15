@@ -1,12 +1,15 @@
 package facades;
 
+import dto.CustomerDTO;
+import dto.ItemTypeDTO;
 import entities.Customer;
-import entities.Ordrer;
+import entities.ItemType;
 import java.io.IOException;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.WebApplicationException;
 import utils.EMF_Creator;
 
 /**
@@ -40,16 +43,62 @@ public class CustomerFacade {
     }
 
     /**
-     * CUSTOMERS
+     * ITEMTYPES
      */
-    public Customer createCustomer(String customerFirmName, String customerFirmAddress, String customerContactName, String customerContactEmail, String customerContactPhone) {
-        Customer c = new Customer(customerFirmName, customerFirmAddress, customerContactName, customerContactEmail, customerContactPhone);
+    public CustomerDTO createCustomer(
+            String customerFirmName,
+            String customerFirmAddress,
+            String customerContactName,
+            String customerContactEmail,
+            String customerContactPhone)
+            throws WebApplicationException {
+        
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
+            Customer c = new Customer(
+                    customerFirmName,
+                    customerFirmAddress,
+                    customerContactName,
+                    customerContactEmail,
+                    customerContactPhone
+            );
             em.persist(c);
             em.getTransaction().commit();
-            return c;
+            return new CustomerDTO(c);
+        } finally {
+            em.close();
+        }
+    }
+
+    public CustomerDTO editCustomer(int id, CustomerDTO item) throws WebApplicationException {
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            Customer c = em.find(Customer.class, id);
+            c.setCustomerFirmName(item.getCustomerFirmName());
+            c.setCustomerFirmAddress(item.getCustomerFirmAddress());
+            c.setCustomerContactEmail(item.getCustomerContactEmail());
+            c.setCustomerContactName(item.getCustomerContactName());
+            c.setCustomerContactPhone(item.getCustomerContactPhone());
+            em.persist(c);
+            em.getTransaction().commit();
+            return new CustomerDTO(c);
+        } finally {
+            em.close();
+        }
+    }
+
+    public void deleteCustomer(int id) throws WebApplicationException {
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            Customer p = em.find(Customer.class, id);
+            if (p == null) {
+                throw new WebApplicationException("Could not delete, provided id does not exist");
+            }
+            em.remove(p);
+            em.getTransaction().commit();
         } finally {
             em.close();
         }
@@ -68,52 +117,15 @@ public class CustomerFacade {
     public List<Customer> findAllCustomers() {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<Customer> num = em.createQuery("Select c from Customer c", Customer.class);
+            TypedQuery<Customer> num = em.createNamedQuery("Customer.findAll", Customer.class);
             return num.getResultList();
         } finally {
             em.close();
         }
     }
-
-    /**
-     * ORD(R)ERS
-     */
-    public Customer addOrdrerToCustomer(int customerID, int ordrerID) {
-        EntityManager em = emf.createEntityManager();
-        try {
-            em.getTransaction().begin();
-            Customer c = em.find(Customer.class, customerID);
-            Ordrer o = em.find(Ordrer.class, ordrerID);
-            c.addOrder(o);
-            em.persist(c);
-            em.getTransaction().commit();
-            return c;
-        } finally {
-            em.close();
-        }
-    }
-
-
-    /**
-     * Find all Orders, for a specific Customer
-     */
-    public List<Ordrer> findAllOrdersPerCustomer(int customerID) {
-        EntityManager em = emf.createEntityManager();
-        try {
-            TypedQuery<Ordrer> num
-                    = em.createQuery("SELECT o FROM Ordrer o JOIN o.customer c where c.customerID = :customerID",
-                            Ordrer.class)
-                            .setParameter("customerID", customerID);
-            return num.getResultList();
-        } finally {
-            em.close();
-        }
-    }
-
 
     public static void main(String[] args) throws IOException {
         emf = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
         CustomerFacade facade = CustomerFacade.getCustomerFacade(emf);
-
     }
 }

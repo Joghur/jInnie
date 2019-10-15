@@ -1,0 +1,52 @@
+<div class="container">
+    <!-- Button to Open the Modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newCustomerModal">
+        New
+    </button>
+
+    <!-- The Modal -->
+    <div class="modal" id="newCustomerModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">New Customer</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form>
+                        Customer Firm Name<br>
+                        <input id="newCustomerFirmName" type="text" name="customerFirmName">
+                        <br>
+                        Customer Firm Address<br>
+                        <input id="newCustomerFirmAddress" type="text" name="customerFirmAddress">
+                        <br>
+                        Customer Contact Name<br>
+                        <input id="newCustomerContactName" type="text" name="customerContactName">
+                        <br>
+                        Customer Contact Email<br>
+                        <input id="newCustomerContactEmail" type="email" name="customerContactEmail">
+                        <br>
+                        Customer Contact Phone<br>
+                        <input id="newCustomerContactPhone" type="number" name="customerContactPhone">
+                    </form>
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button id="closeNewCustomerModal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#newCustomerModal").on('shown.bs.modal', function () {
+                document.querySelector("#closeNewCustomerModal").addEventListener("click", postNewCustomerFunc);
+            });
+        });
+    </script>
+</div>

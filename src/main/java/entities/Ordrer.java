@@ -50,6 +50,10 @@ public class Ordrer implements Serializable { //spelled like that to avoid possi
     public Ordrer() {
         this.orderState = OrderState.ORDER_RECEIVED;
         this.invoiceID = this.hashCode();
+        this.invoiceDate = LocalDate.now();
+    }
+
+    public Ordrer(LocalDate invoiceDate) {
     }
 
     public Integer getOrdrerID() {

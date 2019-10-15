@@ -1,0 +1,44 @@
+<div class="container">
+    <!-- Button to Open the Modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newOrderModal">
+        New
+    </button>
+
+    <!-- The Modal -->
+    <div class="modal" id="newOrderModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">New Order</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form>
+                        Customer Firm Name<br>
+                        <input id="newCustomerFirmName" type="text" name="customerFirmName">
+                        <br>
+                        Customer Firm Address<br>
+                        <input id="newCustomerFirmAddress" type="text" name="customerFirmAddress">
+                        <br>
+                    </form>
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button id="closeNewOrderModal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#newOrderModal").on('shown.bs.modal', function () {
+                document.querySelector("#closeNewOrderModal").addEventListener("click", postNewOrderFunc);
+            });
+        });
+    </script>
+</div>

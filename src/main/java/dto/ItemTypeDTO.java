@@ -11,7 +11,10 @@ public class ItemTypeDTO {
     private Integer itemTypeID;
     private String name;
     private String description;
-    private double price;
+    private Float price;
+
+    public ItemTypeDTO() {
+    }
 
     public ItemTypeDTO(ItemType m) {
         this.itemTypeID = m.getItemTypeID();
@@ -44,11 +47,11 @@ public class ItemTypeDTO {
         this.description = description;
     }
 
-    public double getPrice() {
+    public Float getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Float price) {
         this.price = price;
     }
 

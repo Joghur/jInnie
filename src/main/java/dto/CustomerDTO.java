@@ -16,6 +16,9 @@ public class CustomerDTO {
     private String customerContactEmail;
     private String customerContactPhone;
 
+    public CustomerDTO() {
+    }
+
     public CustomerDTO(Customer m) {
         this.customerID = m.getCustomerID();
         this.customerNumber = m.getCustomerNumber();

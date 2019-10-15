@@ -29,7 +29,7 @@ public class ItemType implements Serializable {
     private Integer itemTypeID;
     private String name;
     private String description;
-    private double price;
+    private Float price;
 
     @OneToMany(mappedBy = "itemType", cascade = CascadeType.PERSIST)
     private List<OrderLine> orderLines = new ArrayList();
@@ -37,7 +37,7 @@ public class ItemType implements Serializable {
     public ItemType() {
     }
 
-    public ItemType(String name, String description, double price) {
+    public ItemType(String name, String description, Float price) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -67,11 +67,11 @@ public class ItemType implements Serializable {
         this.description = description;
     }
 
-    public double getPrice() {
+    public Float getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Float price) {
         this.price = price;
     }
 
