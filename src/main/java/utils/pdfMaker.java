@@ -84,7 +84,7 @@ public class pdfMaker {
         totalPriceText.add("Total ex. moms");
         totalPriceText.add(String.format("%.2f", totalPrice));
         totalPriceText.add("");
-        totalPriceText.add("Moms");
+        totalPriceText.add("Moms (25%)");
         totalPriceText.add(String.format("%.2f", totalPrice * 0.25));
         totalPriceText.add("");
         totalPriceText.add("Total inkl. moms DKK");

@@ -4,6 +4,7 @@ import entities.OrderLine;
 import entities.Ordrer;
 import enumeration.OrderState;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,19 +19,25 @@ public class OrderDTO {
     private String invoiceDate;
     private String workDoneDate;
     private OrderState orderState;
-    private List<OrderLine> orderLines;
+    private float totalPrice=0;
+    private List<OrderLineDTO> orderLines = new ArrayList();
 
     public OrderDTO() {
     }
-    
+
     public OrderDTO(Ordrer m) {
         this.ordrerID = m.getOrdrerID();
         this.invoiceID = m.getInvoiceID();
+        this.customerID = m.getCustomer().getCustomerID();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/LLL-yyyy");
         this.invoiceDate = m.getInvoiceDate().format(formatter);
         this.workDoneDate = m.getWorkDoneDate().format(formatter);
         this.orderState = m.getOrderState();
-        this.orderLines = m.getOrderLines();
+        for (OrderLine orderLine : m.getOrderLines()) {
+            OrderLineDTO or = new OrderLineDTO(orderLine);
+            this.orderLines.add(or);
+            this.totalPrice += or.getQuantity()*or.getItemtype().getPrice();
+        }
     }
 
     public Integer getOrdrerID() {
@@ -57,12 +64,20 @@ public class OrderDTO {
         this.customerID = customerID;
     }
 
-    public List<OrderLine> getOrderLines() {
+    public List<OrderLineDTO> getOrderLines() {
         return orderLines;
     }
 
-    public void setOrderLines(List<OrderLine> orderLines) {
+    public void setOrderLines(List<OrderLineDTO> orderLines) {
         this.orderLines = orderLines;
+    }
+
+    public float getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(float totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     public String getInvoiceDate() {

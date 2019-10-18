@@ -98,6 +98,15 @@ function insertNewCustomerModal() {
     });
 }
 
+/**
+ * Page decorations
+ */
+function customerPageDecos() {
+    $("#h1content").html("Customer");
+    $("#h3content").html("");
+}
+
+document.querySelector("#customerPage").addEventListener("click", customerPageDecos);
 document.querySelector("#customerPage").addEventListener("click", getAllCustomers);
 
 

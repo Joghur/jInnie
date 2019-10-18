@@ -87,6 +87,15 @@ function insertNewItemtypeModal() {
     });
 }
 
+/**
+ * Page decorations
+ */
+function itemtypePageDecos() {
+    $("#h1content").html("Itemtypes");
+    $("#h3content").html("");
+}
+
+document.querySelector("#itemTypePage").addEventListener("click", itemtypePageDecos);
 document.querySelector("#itemTypePage").addEventListener("click", getAllItemTypes);
 
 

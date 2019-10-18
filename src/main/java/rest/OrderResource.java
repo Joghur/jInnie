@@ -1,6 +1,7 @@
 package rest;
 
 import dto.OrderDTO;
+import dto.OrderPOSTDTO;
 import entities.Customer;
 import entities.Ordrer;
 import facades.CustomerFacade;
@@ -9,18 +10,17 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import utils.EMF_Creator;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import utils.EMF_Creator;
 
 /**
  *
@@ -52,27 +52,31 @@ public class OrderResource {
         return dtoList;
     }
 
-    //@POST
+//    @POST
     @Path("new")
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public OrderDTO createOrder(OrderDTO o) {
-        Customer c = CUSTFACADE.findCustomer(o.getCustomerID());
+    public OrderDTO createOrder(OrderPOSTDTO o) {
+        
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/LLL-yyyy");
         LocalDate localDate = LocalDate.parse(o.getWorkDoneDate(), formatter);
-        return FACADE.createOrder(localDate, c, o.getOrderLines());
+        Customer c = CUSTFACADE.findCustomer(o.getCustomerID());
+        return FACADE.createOrder(
+                localDate,
+                c,
+                o.getOrderLines());
     }
 
     //@PUT
-    @PUT
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
-    @Path("{id}")
-    public OrderDTO editOrder(OrderDTO changedOrder, @PathParam("id") int id) throws WebApplicationException {
-        return FACADE.editOrder(id, changedOrder);
-    }
-
+//    @PUT
+//    @Consumes({MediaType.APPLICATION_JSON})
+//    @Produces({MediaType.APPLICATION_JSON})
+//    @Path("{id}")
+//    public OrderDTO editOrder(OrderDTO changedOrder, @PathParam("id") int id) throws WebApplicationException {
+//        return FACADE.editOrder(id, changedOrder);
+//    }
+    
     //@DELETE
     @DELETE
     @Produces({MediaType.APPLICATION_JSON})

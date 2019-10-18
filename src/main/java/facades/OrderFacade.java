@@ -1,10 +1,13 @@
 package facades;
 
 import dto.OrderDTO;
+import dto.OrderLinePOSTDTO;
 import entities.Customer;
+import entities.ItemType;
 import entities.OrderLine;
 import entities.Ordrer;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -41,24 +44,50 @@ public class OrderFacade {
         return emf.createEntityManager();
     }
 
-    /**
-     * ITEMTYPES
-     */
-    public OrderDTO createOrder(LocalDate workDoneDate, Customer c, List<OrderLine> orderLines)
+    public OrderDTO createOrder(LocalDate workDoneDate, Customer c, List<OrderLinePOSTDTO> orderLines)
             throws WebApplicationException {
-
+        List<OrderLine> newOL = new ArrayList();
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
             Ordrer o = new Ordrer();
             o.setCustomer(c);
             o.setWorkDoneDate(workDoneDate);
-            orderLines.forEach((orderLine) -> {
-                o.addOrderLine(orderLine);
-            });
+            o.setOrderLines(newOL);
             em.persist(o);
             em.getTransaction().commit();
+
+            //Updating invoice number and add orderlines
+            em.getTransaction().begin();
+            o.setInvoiceID(o.hashCode());
+            em.getTransaction().commit();
+            for (OrderLinePOSTDTO orderLine : orderLines) {
+                addOrderLineToOrder(
+                        o.getOrdrerID(),
+                        orderLine.getQuantity(),
+                        orderLine.getItemTypeID()
+                );
+            }
+
             return new OrderDTO(o);
+        } finally {
+            em.close();
+        }
+    }
+
+    public Ordrer addOrderLineToOrder(int orderID, int orderLineQuantity, int itemTypeID) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            Ordrer o = em.find(Ordrer.class, orderID);
+            ItemType it = em.find(ItemType.class, itemTypeID);
+            OrderLine ol = new OrderLine(orderLineQuantity);
+            ol.setItemType(it);
+            em.persist(ol);
+            o.addOrderLine(ol);
+            em.persist(o);
+            em.getTransaction().commit();
+            return o;
         } finally {
             em.close();
         }
@@ -82,7 +111,7 @@ public class OrderFacade {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
-            Customer p = em.find(Customer.class, id);
+            Ordrer p = em.find(Ordrer.class, id);
             if (p == null) {
                 throw new WebApplicationException("Could not delete, provided id does not exist");
             }
@@ -113,4 +142,16 @@ public class OrderFacade {
         }
     }
 
+    /**
+     * ITEMTYPES
+     */
+    public ItemType findItemType(int id) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            ItemType c = em.find(ItemType.class, id);
+            return c;
+        } finally {
+            em.close();
+        }
+    }
 }

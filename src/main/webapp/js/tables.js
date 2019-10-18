@@ -135,6 +135,9 @@ function tableEvents(e) {
                 case "customerID":
                     deleteCustomerFunc(id);
                     break;
+                case "ordrerID":
+                    deleteOrderFunc(id);
+                    break;
                 default:
                 // code block
             }

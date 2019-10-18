@@ -40,7 +40,6 @@ public class Ordrer implements Serializable { //spelled like that to avoid possi
     private OrderState orderState;
 
     @OneToMany(mappedBy = "ordrer", cascade = CascadeType.PERSIST)
-//    @ElementCollection
     private List<OrderLine> orderLines = new ArrayList();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -53,7 +52,13 @@ public class Ordrer implements Serializable { //spelled like that to avoid possi
         this.invoiceDate = LocalDate.now();
     }
 
-    public Ordrer(LocalDate invoiceDate) {
+    public Ordrer(LocalDate workDoneDate, Customer customer, List<OrderLine> orderLines) {
+        this.orderState = OrderState.ORDER_RECEIVED;
+        this.invoiceID = this.hashCode();
+        this.invoiceDate = LocalDate.now();
+        this.workDoneDate = workDoneDate;
+        this.customer = customer;
+        this.orderLines = orderLines;
     }
 
     public Integer getOrdrerID() {
@@ -115,11 +120,15 @@ public class Ordrer implements Serializable { //spelled like that to avoid possi
         }
     }
 
+    public void setOrderLines(List<OrderLine> orderLines) {
+        this.orderLines = orderLines;
+    }
+
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 97 * hash + Objects.hashCode(this.ordrerID);
-        hash = 97 * hash + Objects.hashCode(this.customer);
+        int hash = 2;
+        hash = 5 * hash + Objects.hashCode(this.ordrerID);
+        hash = 5 * hash + Objects.hashCode(this.customer);
         return hash;
     }
 

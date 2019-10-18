@@ -77,6 +77,6 @@ public class CustomerResource {
     @Path("{id}")
     public String deleteCustomer(@PathParam("id") int id) throws WebApplicationException {
         FACADE.deleteCustomer(id);
-        return "{\"Status\":\"Customer deleted\"}";
+        return "{\"Status\":\"Order deleted\"}";
     }
 }

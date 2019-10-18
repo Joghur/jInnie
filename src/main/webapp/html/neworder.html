@@ -1,6 +1,6 @@
 <div class="container">
     <!-- Button to Open the Modal -->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newOrderModal">
+    <button id="newButtonOrderPage" type="button" class="btn btn-primary" data-toggle="modal" data-target="#newOrderModal">
         New
     </button>
 
@@ -18,12 +18,18 @@
                 <!-- Modal body -->
                 <div class="modal-body">
                     <form>
-                        Customer Firm Name<br>
-                        <input id="newCustomerFirmName" type="text" name="customerFirmName">
-                        <br>
-                        Customer Firm Address<br>
-                        <input id="newCustomerFirmAddress" type="text" name="customerFirmAddress">
-                        <br>
+                        <div>Date: <input id="datepicker" type="text"></div>                        <br>
+                        <fieldset>
+                            <h2>Select Customer</h2>
+                            <select id="selCustomer" size="10"></select>
+                            <h2>Select Itemtypes</h2>
+                            <select id="selItemtypes" multiple="multiple" size="10"></select>
+                            <button type = "button"
+                                    onclick = "getSelections()">
+                                Submit 
+                            </button>
+                        </fieldset>
+                        <div id="output"></div>
                     </form>
                 </div>
                 <!-- Modal footer -->
