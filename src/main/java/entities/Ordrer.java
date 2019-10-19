@@ -26,7 +26,8 @@ import javax.persistence.OneToMany;
     @NamedQuery(name = "Ordrer.findInvoiceID", query = "SELECT s FROM Ordrer s WHERE s.invoiceID = :invoiceID"),
     @NamedQuery(name = "Ordrer.findInvoiceDate", query = "SELECT s FROM Ordrer s WHERE s.invoiceDate = :invoiceDate"),
     @NamedQuery(name = "Ordrer.findWorkDoneDate", query = "SELECT s FROM Ordrer s WHERE s.workDoneDate = :workDoneDate"),
-    @NamedQuery(name = "Ordrer.findOrderState", query = "SELECT s FROM Ordrer s WHERE s.orderState = :orderState")})
+    @NamedQuery(name = "Ordrer.findOrderState", query = "SELECT s FROM Ordrer s WHERE s.orderState = :orderState")
+})
 public class Ordrer implements Serializable { //spelled like that to avoid possible DB mixup. Order is reserved
 
     private static final long serialVersionUID = 1L;
@@ -126,9 +127,8 @@ public class Ordrer implements Serializable { //spelled like that to avoid possi
 
     @Override
     public int hashCode() {
-        int hash = 2;
-        hash = 5 * hash + Objects.hashCode(this.ordrerID);
-        hash = 5 * hash + Objects.hashCode(this.customer);
+        int hash = 65863;
+        hash += +Objects.hashCode(this.ordrerID);
         return hash;
     }
 

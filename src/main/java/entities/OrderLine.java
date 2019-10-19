@@ -10,11 +10,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
-
 @Entity
-@NamedQuery(name = "OrderLine.deleteAllRows", query = "DELETE from OrderLine")
+@NamedQueries({
+    @NamedQuery(name = "OrderLine.findAll", query = "SELECT s FROM OrderLine s"),
+    @NamedQuery(name = "OrderLine.deleteAllRows", query = "DELETE from OrderLine")
+})
 public class OrderLine implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -22,13 +25,13 @@ public class OrderLine implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer orderLineID;
     private Integer quantity;
-    
+
     private Ordrer ordrer;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "itemTypeID")
     private ItemType itemType;
-    
+
     public OrderLine() {
     }
 

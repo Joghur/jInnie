@@ -112,11 +112,20 @@ public class OrderFacade {
         try {
             em.getTransaction().begin();
             Ordrer p = em.find(Ordrer.class, id);
-            if (p == null) {
+            TypedQuery<OrderLine> ol = em.createNamedQuery("OrderLine.findAll", OrderLine.class);
+            if (ol.getResultList()!= null) {
+                for (OrderLine orderLine : ol.getResultList()) {
+                    em.remove(orderLine);
+                }
+            }
+            em.getTransaction().commit();
+            em.getTransaction().begin();
+            if (p != null) {
+                em.remove(p);
+                em.getTransaction().commit();
+            } else {
                 throw new WebApplicationException("Could not delete, provided id does not exist");
             }
-            em.remove(p);
-            em.getTransaction().commit();
         } finally {
             em.close();
         }
