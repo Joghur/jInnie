@@ -28,9 +28,8 @@ function getAllCustomers() {
                     list2Table(data, "#content", keyList);
                     linking("#content");
                 } else {
-                    var tableElement = CONTENTDIV.querySelector("table");
-                    if (tableElement !== null) {
-                        CONTENTDIV.querySelector("table").remove();
+                    if (document.querySelector("#content table") != null) {
+                        document.querySelector("#content table").remove();
                     }
                     alert("\n\nNo data left!");
                 }

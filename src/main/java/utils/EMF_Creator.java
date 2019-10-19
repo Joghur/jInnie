@@ -109,7 +109,7 @@ public class EMF_Creator {
         */
         
         System.out.println("USER ------------> "+user);
-        System.out.println("PW --------------> "+pw);
+        System.out.println("PW --------------> "); //+pw
         System.out.println("CONNECTION STR---> "+connection_str);
         System.out.println("PU-Strategy---> "+strategy.toString());
         

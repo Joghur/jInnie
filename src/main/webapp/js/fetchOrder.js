@@ -28,9 +28,8 @@ function getAllOrders() {
                     list2Table(data, "#content", keyList);
                     linking("#content");
                 } else {
-                    var tableElement = CONTENTDIV.querySelector("table");
-                    if (tableElement !== null) {
-                        CONTENTDIV.querySelector("table").remove();
+                    if (document.querySelector("#content table") != null) {
+                        document.querySelector("#content table").remove();
                     }
                     alert("\n\nNo data left!");
                 }
@@ -111,10 +110,6 @@ function deleteOrderFunc(id) {
 function fillSelectionLists() {
 
     $(function () {
-
-//        $("#datepicker").setDefaults(datepicker.regional['dk']);
-//        $("#datepicker").datepicker("option", "dateFormat", "dd/M-yy");
-//        $("#datepicker").datepicker.setDefaults( $.datepicker.regional[ "fr" ] );
         $("#datepicker").datepicker({
             closeText: "Luk",
             prevText: "&#x3C;Forrige",
@@ -144,7 +139,7 @@ function fillSelectionLists() {
                 for (var i = 0; i < data.length; i++) {
                     console.log(data[i].customerContactName);
                     var option = document.createElement("option");
-                    option.text = data[i].customerID + " " +    
+                    option.text = data[i].customerID + " " +
                             data[i].customerContactName;
                     x.add(option);
                 }

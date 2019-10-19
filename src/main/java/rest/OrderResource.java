@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -58,8 +59,9 @@ public class OrderResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public OrderDTO createOrder(OrderPOSTDTO o) {
-        
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/LLL-yyyy");
+        System.out.println("o.getWorkDoneDate(): " + o.getWorkDoneDate());
+        final Locale dk = new Locale("da", "DK");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/LLL-yyyy", dk);
         LocalDate localDate = LocalDate.parse(o.getWorkDoneDate(), formatter);
         Customer c = CUSTFACADE.findCustomer(o.getCustomerID());
         return FACADE.createOrder(
@@ -76,7 +78,6 @@ public class OrderResource {
 //    public OrderDTO editOrder(OrderDTO changedOrder, @PathParam("id") int id) throws WebApplicationException {
 //        return FACADE.editOrder(id, changedOrder);
 //    }
-    
     //@DELETE
     @DELETE
     @Produces({MediaType.APPLICATION_JSON})
