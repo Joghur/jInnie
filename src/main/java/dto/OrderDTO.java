@@ -20,7 +20,7 @@ public class OrderDTO {
     private String invoiceDate;
     private String workDoneDate;
     private OrderState orderState;
-    private float totalPrice=0;
+    private float totalPrice = 0;
     private List<OrderLineDTO> orderLines = new ArrayList();
     private final Locale dk = new Locale("da", "DK");
 
@@ -36,9 +36,11 @@ public class OrderDTO {
         this.workDoneDate = m.getWorkDoneDate().format(formatter);
         this.orderState = m.getOrderState();
         for (OrderLine orderLine : m.getOrderLines()) {
-            OrderLineDTO or = new OrderLineDTO(orderLine);
-            this.orderLines.add(or);
-            this.totalPrice += or.getQuantity()*or.getItemtype().getPrice();
+            if (orderLine != null) {
+                OrderLineDTO or = new OrderLineDTO(orderLine);
+                this.orderLines.add(or);
+                this.totalPrice += or.getQuantity() * or.getItemtype().getPrice();
+            }
         }
     }
 

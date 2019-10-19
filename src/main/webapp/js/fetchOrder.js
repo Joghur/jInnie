@@ -53,22 +53,26 @@ function postNewOrderFunc(e) {
     }
 
     var orderLines = [];
-    for (i = 0; i < selItemtypes.length; i++) {
-        currentOption = selItemtypes[i];
-        if (currentOption.selected === true) {
-            orderLines.push(
-                    {
-                        "itemTypeID": currentOption.value.split(" ")[0],
-                        "quantity": 1
-                    }
-            );
-        }
+    var selTable = document.querySelector("#selectionTable");
+    var itemTypeID;
+    var quantity;
+    for (var i = 0, row; row = selTable.rows[i]; i++) {
+        itemTypeID = Number(selTable.rows[i].cells[0].innerHTML);
+        quantity = Number(selTable.rows[i].cells[1].getElementsByTagName('input')[0].value);
+        console.log("itemTypeID", itemTypeID);
+        console.log("quantity", quantity);
+        orderLines.push(
+                {
+                    "itemTypeID": itemTypeID,
+                    "quantity": quantity
+                }
+        );
     }
 
     var workDoneDate = document.querySelector("#datepicker").value;
     console.log("customerID", customerID);
     console.log("orderLines", orderLines);
-//    console.log("quantity", quantity);
+    console.log("quantity", quantity);
     console.log("workDoneDate", workDoneDate);
 
     let options = {
@@ -111,6 +115,7 @@ function fillSelectionLists() {
 
     $(function () {
         $("#datepicker").datepicker({
+            container: '#divDate',
             closeText: "Luk",
             prevText: "&#x3C;Forrige",
             nextText: "Næste&#x3E;",
@@ -127,6 +132,8 @@ function fillSelectionLists() {
             firstDay: 1,
             isRTL: false,
             showMonthAfterYear: false,
+            changeMonth: true,
+            changeYear: true,
             yearSuffix: ""});
     });
 
@@ -159,52 +166,30 @@ function fillSelectionLists() {
 }
 
 function getSelections() {
-    //Date selection
-    var selects = [];
-    var result = "<h2>Date selected</h2>";
-    result += "<ul>";
-    result += document.querySelector("#datepicker").value;
-    selects.push("'workDoneDate':" + document.querySelector("#datepicker").value + "'");
-    result += "</ul>";
-    //Customer selection
-    var selCustomer = document.getElementById("selCustomer");
-    result += "<h2>Customer selected</h2>";
-    result += "<ul>";
-    var customerid;
-    for (i = 0; i < selCustomer.length; i++) {
-        currentOption = selCustomer[i];
-        if (currentOption.selected === true) {
-            result += " <li>" + currentOption.value + "</li>";
-            customerid = currentOption.value.split(" ")[0];
-        }
-    }
-    selects.push("'customerID':" + customerid)
-    result += "</ul>";
-    //Itemtypes selections
-    var selItemtypes = document.getElementById("selItemtypes");
-    result += "<h2>Itemtypes selected</h2>";
-    result += "<ul>";
-    var items = [];
+    selections = document.querySelector("#selItemtypes");
+    var result = "<h2>Orderlines selected</h2>";
+    output = document.querySelector("#output");
+    var table = document.createElement("TABLE");
+    table.setAttribute("id", "selectionTable");
+
     for (i = 0; i < selItemtypes.length; i++) {
         currentOption = selItemtypes[i];
         if (currentOption.selected === true) {
-            result += " <li>" + currentOption.value + "</li>";
-            items.push(
-                    "'itemTypeID':" + currentOption.value.split(" ")[0] +
-                    ",'quantity':1"
-                    );
+            var row = table.insertRow(-1);
+            var cell = document.createElement("TH");
+            var text = document.createTextNode(currentOption.value.split(" ")[0]);
+            cell.appendChild(text);
+            row.appendChild(cell);
+
+            var inputCell = document.createElement("TH");
+            text = document.createElement("input");
+            text.setAttribute("type", "number");
+            text.setAttribute("value", 1);
+            inputCell.appendChild(text);
+            row.appendChild(inputCell);
         }
     }
-    items = "{" + items.join(",") + "}";
-    selects.push(items);
-    result += "</ul>";
-    output = document.getElementById("output");
-    output.innerHTML = result;
-    console.log(selects);
-    selects = "{" + selects.join(",") + "}";
-
-    console.log(selects);
-    return selects;
+    output.appendChild(table);
 }
 
 
