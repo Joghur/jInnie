@@ -1,0 +1,46 @@
+<div class="container">
+    <!-- Button to Open the Modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newItemtypeModal">
+        New
+    </button>
+
+    <!-- The Modal -->
+    <div class="modal" id="newItemtypeModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">New Itemtype</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form>
+                        Service<br>
+                        <input id="newItemtypeName" type="text" name="name">
+                        <br>
+                        Description:<br>
+                        <input id="newItemtypeDescription" type="text" name="description">
+                        <br>
+                        price:<br>
+                        <input id="newItemtypePrice" type="number" name="price">
+                    </form>
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button id="closeNewItemtypeModal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#newItemtypeModal").on('shown.bs.modal', function () {
+                document.querySelector("#closeNewItemtypeModal").addEventListener("click", postNewItemtypeFunc);
+            });
+        });
+    </script>
+</div>

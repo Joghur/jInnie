@@ -1,5 +1,6 @@
 package facades;
 
+import dto.ItemTypeDTO;
 import entities.Customer;
 import entities.ItemType;
 import entities.MasterData;
@@ -85,14 +86,14 @@ public class TheFacade {
     /**
      * ITEMTYPES
      */
-    public ItemType addItemType(String name, String description, double price) {
+    public ItemTypeDTO addItemType(String name, String description, float price) {
         ItemType c = new ItemType(name, description, price);
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
             em.persist(c);
             em.getTransaction().commit();
-            return c;
+            return new ItemTypeDTO(c);
         } finally {
             em.close();
         }
@@ -294,6 +295,41 @@ public class TheFacade {
         TheFacade facade = TheFacade.getTheFacade(emf);
         System.out.println("Finding all orders:");
         System.out.println(facade.findAllOrders());
+
+        pdfMaker pdf = new pdfMaker();
+        List<String> orderLineTextList = new ArrayList();
+
+//      Find all Orders, for a specific Customer
+        List<Ordrer> oList = facade.findAllOrdersPerCustomer(1);
+        System.out.println("\nAll orders from customer #1:");
+        double totalPrice = 0;
+        Ordrer or = oList.get(1);
+//        or.setWorkDoneDate(LocalDate.of(2019, Month.SEPTEMBER, 17));
+//        or.setInvoiceDate(LocalDate.of(2019, Month.SEPTEMBER, 21));
+//        facade.updateOrder(or.getOrdrerID(), or);
+        System.out.println("Order #" + or.getOrdrerID() + " - " + or.getCustomer());
+
+//      Find the total price of an order   
+        List<OrderLine> ol1List = facade.findTotalOrderPrice(or.getOrdrerID());
+
+        System.out.println("Orderline price:");
+        for (OrderLine orderLine : ol1List) {
+            int quantity = orderLine.getQuantity();
+            double price = orderLine.getItemType().getPrice();
+            totalPrice += quantity * price;
+            String text = orderLine.getItemType().getName()
+                    + "                              " + or.getWorkDoneDate()
+                    + "   " + quantity
+                    + "       " + String.format("%.2f", price);
+            orderLineTextList.add(text);
+            orderLineTextList.add(orderLine.getItemType().getDescription());
+
+            System.out.println(text);
+        }
+
+        System.out.println("Order total price: " + totalPrice + " kr.");
+        pdf.invoicePDFFlow(facade.getMasterData(), orderLineTextList,
+                facade.findCustomer(1), or, (float) totalPrice);
 
     }
 }

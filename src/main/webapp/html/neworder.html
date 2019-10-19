@@ -1,0 +1,72 @@
+<div class="container">
+    <!-- Button to Open the Modal -->
+    <button id="newButtonOrderPage" type="button" class="btn btn-primary" data-toggle="modal" data-target="#newOrderModal">
+        New
+    </button>
+
+    <!-- The Modal -->
+    <div class="modal" id="newOrderModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">New Order</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form>
+                        <fieldset>
+                            <h2>Select Customer</h2>
+                            <div id="dateDiv">Date: <input id="datepicker" class="clsdatepicker" type="text"></div>
+                            <br>
+                            <select id="selCustomer" size="10"></select>
+                            <h2>Select Itemtypes</h2>
+                            <select id="selItemtypes" multiple="multiple" size="10"></select>
+                            <button type = "button"
+                                    onclick = "getSelections()">
+                                Submit 
+                            </button>
+                        </fieldset>
+                        <div id="output"></div>
+                    </form>
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button id="closeNewOrderModal" type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>  
+    <script>
+        var widget = $("#datepicker").datepicker("widget");
+        $("#datepicker").datepicker({
+            closeText: "Luk",
+            prevText: "&#x3C;Forrige",
+            nextText: "Næste&#x3E;",
+            currentText: "Idag",
+            monthNames: ["januar", "februar", "marts", "april", "maj", "juni",
+                "juli", "august", "september", "oktober", "november", "december"],
+            monthNamesShort: ["jan", "feb", "mar", "apr", "maj", "jun",
+                "jul", "aug", "sep", "okt", "nov", "dec"],
+            dayNames: ["Søndag", "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag"],
+            dayNamesShort: ["Søn", "Man", "Tir", "Ons", "Tor", "Fre", "Lør"],
+            dayNamesMin: ["Sø", "Ma", "Ti", "On", "To", "Fr", "Lø"],
+            weekHeader: "Uge",
+            dateFormat: "dd/M-yy",
+            firstDay: 1,
+            isRTL: false,
+            showMonthAfterYear: false,
+            changeMonth: true,
+            changeYear: true,
+            yearSuffix: ""});
+        $(document).ready(function () {
+            $("#newOrderModal").on('shown.bs.modal', function () {
+                document.querySelector("#closeNewOrderModal").addEventListener("click", postNewOrderFunc);
+            });
+        });
+    </script>
+</div>

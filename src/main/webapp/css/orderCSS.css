@@ -1,17 +1,20 @@
-input[type=text] {
-    background-image: url(../img/paper.gif);
-    width: 7%;
+/*input[type=text] {
     padding: 12px 20px;
     margin: 8px 19px 8px 0px;
     box-sizing: border-box;
     border: 2px solid red;
-    border-radius: 25px;
-    -webkit-transition: width 0.4s ease-in-out;
-    transition: width 0.4s ease-in-out;
+}*/
+
+/*input[type=text]:focus {
+    width: 100%;
+}*/
+
+#dateDiv {
+    float: right;
 }
 
-input[type=text]:focus {
-    width: 10%;
+.clsdatepicker {
+    z-index: 10000 !important;
 }
 
 #inputDiv {
@@ -19,3 +22,4 @@ input[type=text]:focus {
     list-style-type: none;
     text-align: center;
 }
+

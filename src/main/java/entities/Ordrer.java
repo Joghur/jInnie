@@ -26,7 +26,8 @@ import javax.persistence.OneToMany;
     @NamedQuery(name = "Ordrer.findInvoiceID", query = "SELECT s FROM Ordrer s WHERE s.invoiceID = :invoiceID"),
     @NamedQuery(name = "Ordrer.findInvoiceDate", query = "SELECT s FROM Ordrer s WHERE s.invoiceDate = :invoiceDate"),
     @NamedQuery(name = "Ordrer.findWorkDoneDate", query = "SELECT s FROM Ordrer s WHERE s.workDoneDate = :workDoneDate"),
-    @NamedQuery(name = "Ordrer.findOrderState", query = "SELECT s FROM Ordrer s WHERE s.orderState = :orderState")})
+    @NamedQuery(name = "Ordrer.findOrderState", query = "SELECT s FROM Ordrer s WHERE s.orderState = :orderState")
+})
 public class Ordrer implements Serializable { //spelled like that to avoid possible DB mixup. Order is reserved
 
     private static final long serialVersionUID = 1L;
@@ -40,7 +41,6 @@ public class Ordrer implements Serializable { //spelled like that to avoid possi
     private OrderState orderState;
 
     @OneToMany(mappedBy = "ordrer", cascade = CascadeType.PERSIST)
-//    @ElementCollection
     private List<OrderLine> orderLines = new ArrayList();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -50,6 +50,16 @@ public class Ordrer implements Serializable { //spelled like that to avoid possi
     public Ordrer() {
         this.orderState = OrderState.ORDER_RECEIVED;
         this.invoiceID = this.hashCode();
+        this.invoiceDate = LocalDate.now();
+    }
+
+    public Ordrer(LocalDate workDoneDate, Customer customer, List<OrderLine> orderLines) {
+        this.orderState = OrderState.ORDER_RECEIVED;
+        this.invoiceID = this.hashCode();
+        this.invoiceDate = LocalDate.now();
+        this.workDoneDate = workDoneDate;
+        this.customer = customer;
+        this.orderLines = orderLines;
     }
 
     public Integer getOrdrerID() {
@@ -111,11 +121,14 @@ public class Ordrer implements Serializable { //spelled like that to avoid possi
         }
     }
 
+    public void setOrderLines(List<OrderLine> orderLines) {
+        this.orderLines = orderLines;
+    }
+
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 97 * hash + Objects.hashCode(this.ordrerID);
-        hash = 97 * hash + Objects.hashCode(this.customer);
+        int hash = 65863;
+        hash += +Objects.hashCode(this.ordrerID);
         return hash;
     }
 

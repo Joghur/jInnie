@@ -35,7 +35,7 @@ public class pdfMaker {
     }
 
     public void invoicePDFFlow(MasterData ma, List<String> ol1List,
-            Customer cust, Ordrer or, double totalPrice) throws IOException {
+            Customer cust, Ordrer or, float totalPrice) throws IOException {
         List<String> subtext = new ArrayList<>();
         List<String> subtext2 = new ArrayList<>();
         List<String> firmInfos = new ArrayList<>();
@@ -84,7 +84,7 @@ public class pdfMaker {
         totalPriceText.add("Total ex. moms");
         totalPriceText.add(String.format("%.2f", totalPrice));
         totalPriceText.add("");
-        totalPriceText.add("Moms");
+        totalPriceText.add("Moms (25%)");
         totalPriceText.add(String.format("%.2f", totalPrice * 0.25));
         totalPriceText.add("");
         totalPriceText.add("Total inkl. moms DKK");
