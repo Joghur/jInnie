@@ -8,6 +8,8 @@
     <class>entities.MasterData</class>
     <class>entities.OrderLine</class>
     <class>entities.Ordrer</class>
+    <class>entities.Role</class>
+    <class>entities.User</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <!-- DO NOT remove the line below. It's not set by the  entityUtils.EMF_Creator -->

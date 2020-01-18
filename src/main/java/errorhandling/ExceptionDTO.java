@@ -1,6 +1,6 @@
 package errorhandling;
 
-public class ExceptionDTO {
+public class ExceptionDTO{
 
   public ExceptionDTO(int code, String description){
       this.code = code;
@@ -8,4 +8,13 @@ public class ExceptionDTO {
   }
   private int code;
   private String message;
+
+    public int getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+  
 }

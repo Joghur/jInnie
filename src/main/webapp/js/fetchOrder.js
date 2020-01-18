@@ -53,20 +53,28 @@ function postNewOrderFunc(e) {
     }
 
     var orderLines = [];
-    var selTable = document.querySelector("#selectionTable");
+    var selTable = document.querySelector("#output");
+    console.log("selTable", selTable);
+    var count = document.querySelector("#output").childElementCount;
+    var c = selTable.childNodes;
+    console.log("selTable c", c);
+    console.log("selTable count", count);
     var itemTypeID;
     var quantity;
-    for (var i = 0, row; row = selTable.rows[i]; i++) {
-        itemTypeID = Number(selTable.rows[i].cells[0].innerHTML);
-        quantity = Number(selTable.rows[i].cells[1].getElementsByTagName('input')[0].value);
+    for (var i = 0; i < count; i++) {
+        itemTypeID = Number(c[i].rows[0].cells[0].innerHTML);
+        quantity = Number(c[i].rows[0].cells[1].getElementsByTagName('input')[0].value);
         console.log("itemTypeID", itemTypeID);
         console.log("quantity", quantity);
+        console.log("orderLines before push", orderLines);
         orderLines.push(
                 {
                     "itemTypeID": itemTypeID,
-                    "quantity": quantity
+                    "quantity": quantity,
+                    "orderLineDoneDate": quantity
                 }
         );
+        console.log("orderLines after push", orderLines);
     }
 
     var workDoneDate = document.querySelector("#datepicker").value;
@@ -123,12 +131,12 @@ function fillSelectionLists() {
             monthNames: ["januar", "februar", "marts", "april", "maj", "juni",
                 "juli", "august", "september", "oktober", "november", "december"],
             monthNamesShort: ["jan", "feb", "mar", "apr", "maj", "jun",
-                "jul", "aug", "sep", "okt", "nov", "dec"],
+                "jul", "aug", "Sep", "Okt", "nov", "Dec"],
             dayNames: ["Søndag", "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag"],
             dayNamesShort: ["Søn", "Man", "Tir", "Ons", "Tor", "Fre", "Lør"],
             dayNamesMin: ["Sø", "Ma", "Ti", "On", "To", "Fr", "Lø"],
             weekHeader: "Uge",
-            dateFormat: "dd/M-yy",
+            dateFormat: "dd/Mmm-yy",
             firstDay: 1,
             isRTL: false,
             showMonthAfterYear: false,
@@ -180,6 +188,10 @@ function getSelections() {
             var text = document.createTextNode(currentOption.value.split(" ")[0]);
             cell.appendChild(text);
             row.appendChild(cell);
+            var cellDate = document.createElement("TH");
+            var textDate = document.createTextNode(document.querySelector("#datepicker").value);
+            cellDate.appendChild(textDate);
+            row.appendChild(cellDate);
 
             var inputCell = document.createElement("TH");
             text = document.createElement("input");

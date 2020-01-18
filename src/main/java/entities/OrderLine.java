@@ -16,6 +16,7 @@ import javax.persistence.NamedQuery;
 @Entity
 @NamedQueries({
     @NamedQuery(name = "OrderLine.findAll", query = "SELECT s FROM OrderLine s"),
+    @NamedQuery(name = "OrderLine.findByOrderID", query = "SELECT s FROM OrderLine s where s.ordrer.ordrerID = :ordrerID"),
     @NamedQuery(name = "OrderLine.deleteAllRows", query = "DELETE from OrderLine")
 })
 public class OrderLine implements Serializable {
@@ -25,6 +26,7 @@ public class OrderLine implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer orderLineID;
     private Integer quantity;
+    private String orderLineDoneDate;
 
     private Ordrer ordrer;
 
@@ -71,6 +73,16 @@ public class OrderLine implements Serializable {
         this.itemType = itemType;
     }
 
+    public String getOrderLineDoneDate() {
+        return orderLineDoneDate;
+    }
+
+    public void setOrderLineDoneDate(String orderLineDoneDate) {
+        this.orderLineDoneDate = orderLineDoneDate;
+    }
+
+    
+    
     @Override
     public int hashCode() {
         int hash = 7;
@@ -90,7 +102,19 @@ public class OrderLine implements Serializable {
             return false;
         }
         final OrderLine other = (OrderLine) obj;
+        if (!Objects.equals(this.orderLineDoneDate, other.orderLineDoneDate)) {
+            return false;
+        }
         if (!Objects.equals(this.orderLineID, other.orderLineID)) {
+            return false;
+        }
+        if (!Objects.equals(this.quantity, other.quantity)) {
+            return false;
+        }
+        if (!Objects.equals(this.ordrer, other.ordrer)) {
+            return false;
+        }
+        if (!Objects.equals(this.itemType, other.itemType)) {
             return false;
         }
         return true;
@@ -98,7 +122,7 @@ public class OrderLine implements Serializable {
 
     @Override
     public String toString() {
-        return "OrderLine{" + "orderLineID=" + orderLineID + ", quantity=" + quantity + ", ordrer=" + ordrer + ", itemType=" + itemType + '}';
+        return "OrderLine{" + "orderLineID=" + orderLineID + ", quantity=" + quantity + ", orderLineDoneDate=" + orderLineDoneDate + ", ordrer=" + ordrer + ", itemType=" + itemType + '}';
     }
 
 }

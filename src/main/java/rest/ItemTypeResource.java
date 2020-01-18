@@ -36,8 +36,9 @@ public class ItemTypeResource {
         return "{\"msg\":\"Hello World\"}";
     }
 
-    @Path("all")
     @GET
+    @Path("all")
+//    @RolesAllowed({"user", "admin"})
     @Produces({MediaType.APPLICATION_JSON})
     public List<ItemTypeDTO> getAllOrders() {
         List<ItemType> list = FACADE.findAllItemTypes();
@@ -48,28 +49,28 @@ public class ItemTypeResource {
         return dtoList;
     }
 
-    //@POST
-    @Path("new")
     @POST
+    @Path("new")
+//    @RolesAllowed({"user", "admin"})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public ItemTypeDTO createItemType(ItemTypeDTO item) {
         return FACADE.createItemType(item.getName(), item.getDescription(), item.getPrice());
     }
 
-    //@PUT
     @PUT
+    @Path("edit")
+//    @RolesAllowed({"user", "admin"})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("{id}")
-    public ItemTypeDTO editPerson(ItemTypeDTO changedItem, @PathParam("id") int id) throws WebApplicationException {
-        return FACADE.editItemType(id, changedItem);
+    public ItemTypeDTO editPerson(ItemTypeDTO changedItem) throws WebApplicationException {
+        return FACADE.editItemType(changedItem);
     }
 
-    //@DELETE
     @DELETE
+    @Path("/delete/{id}")
+//    @RolesAllowed({"user", "admin"})
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("{id}")
     public String deletePerson(@PathParam("id") int id) throws WebApplicationException {
         FACADE.deleteItemType(id);
         return "{\"Status\":\"Person deleted\"}";

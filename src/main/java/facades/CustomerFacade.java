@@ -1,16 +1,13 @@
 package facades;
 
 import dto.CustomerDTO;
-import dto.ItemTypeDTO;
 import entities.Customer;
-import entities.ItemType;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.WebApplicationException;
-import utils.EMF_Creator;
 
 /**
  *
@@ -19,7 +16,7 @@ import utils.EMF_Creator;
 public class CustomerFacade {
 
     private static CustomerFacade instance;
-    private static EntityManagerFactory emf;
+    private static EntityManagerFactory emfCustomer;
 
     //Private Constructor to ensure Singleton
     private CustomerFacade() {
@@ -32,36 +29,33 @@ public class CustomerFacade {
      */
     public static CustomerFacade getCustomerFacade(EntityManagerFactory _emf) {
         if (instance == null) {
-            emf = _emf;
+            emfCustomer = _emf;
             instance = new CustomerFacade();
         }
         return instance;
     }
 
     private EntityManager getEntityManager() {
-        return emf.createEntityManager();
+        return emfCustomer.createEntityManager();
     }
 
     /**
      * ITEMTYPES
+     *
+     * @param customerContactName
      */
-    public CustomerDTO createCustomer(
-            String customerFirmName,
-            String customerFirmAddress,
-            String customerContactName,
-            String customerContactEmail,
-            String customerContactPhone)
+    public CustomerDTO createCustomer(CustomerDTO dto)
             throws WebApplicationException {
-        
-        EntityManager em = emf.createEntityManager();
+
+        EntityManager em = emfCustomer.createEntityManager();
         try {
             em.getTransaction().begin();
             Customer c = new Customer(
-                    customerFirmName,
-                    customerFirmAddress,
-                    customerContactName,
-                    customerContactEmail,
-                    customerContactPhone
+                    dto.getCustomerFirmName(),
+                    dto.getCustomerFirmAddress(),
+                    dto.getCustomerContactName(),
+                    dto.getCustomerContactEmail(),
+                    dto.getCustomerContactPhone()
             );
             em.persist(c);
             em.getTransaction().commit();
@@ -71,17 +65,31 @@ public class CustomerFacade {
         }
     }
 
-    public CustomerDTO editCustomer(int id, CustomerDTO item) throws WebApplicationException {
-        EntityManager em = emf.createEntityManager();
+    public CustomerDTO editCustomer(CustomerDTO item) throws WebApplicationException {
+        EntityManager em = emfCustomer.createEntityManager();
         try {
             em.getTransaction().begin();
-            Customer c = em.find(Customer.class, id);
-            c.setCustomerFirmName(item.getCustomerFirmName());
-            c.setCustomerFirmAddress(item.getCustomerFirmAddress());
-            c.setCustomerContactEmail(item.getCustomerContactEmail());
-            c.setCustomerContactName(item.getCustomerContactName());
-            c.setCustomerContactPhone(item.getCustomerContactPhone());
-            em.persist(c);
+            Customer c = em.find(Customer.class, item.getCustomerID());
+            if (item.getCustomerFirmName() != null && !item.getCustomerFirmName().isEmpty()) {
+                c.setCustomerFirmName(item.getCustomerFirmName());
+            }
+
+            if (item.getCustomerFirmAddress() != null && !item.getCustomerFirmAddress().isEmpty()) {
+                c.setCustomerFirmAddress(item.getCustomerFirmAddress());
+            }
+
+            if (item.getCustomerContactEmail() != null && !item.getCustomerContactEmail().isEmpty()) {
+                c.setCustomerContactEmail(item.getCustomerContactEmail());
+            }
+
+            if (item.getCustomerContactName() != null && !item.getCustomerContactName().isEmpty()) {
+                c.setCustomerContactName(item.getCustomerContactName());
+            }
+
+            if (item.getCustomerContactPhone() != null && !item.getCustomerContactPhone().isEmpty()) {
+                c.setCustomerContactPhone(item.getCustomerContactPhone());
+            }
+            em.merge(c);
             em.getTransaction().commit();
             return new CustomerDTO(c);
         } finally {
@@ -90,7 +98,7 @@ public class CustomerFacade {
     }
 
     public void deleteCustomer(int id) throws WebApplicationException {
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = emfCustomer.createEntityManager();
         try {
             em.getTransaction().begin();
             Customer p = em.find(Customer.class, id);
@@ -105,7 +113,7 @@ public class CustomerFacade {
     }
 
     public Customer findCustomer(int id) {
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = emfCustomer.createEntityManager();
         try {
             Customer c = em.find(Customer.class, id);
             return c;
@@ -114,18 +122,27 @@ public class CustomerFacade {
         }
     }
 
-    public List<Customer> findAllCustomers() {
-        EntityManager em = emf.createEntityManager();
+    public List<CustomerDTO> findAllCustomers() {
+        EntityManager em = emfCustomer.createEntityManager();
+        List<Customer> entList = new ArrayList();
+        List<CustomerDTO> dtoList = new ArrayList();
+
         try {
-            TypedQuery<Customer> num = em.createNamedQuery("Customer.findAll", Customer.class);
-            return num.getResultList();
+            TypedQuery<Customer> list = em.createQuery("SELECT s FROM Customer s", Customer.class);
+            entList = list.getResultList();
+            if (entList.size() > 0) {
+                for (Customer object : entList) {
+                    dtoList.add(new CustomerDTO(object));
+                }
+            }
+            return dtoList;
         } finally {
             em.close();
         }
     }
-
-    public static void main(String[] args) throws IOException {
-        emf = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
-        CustomerFacade facade = CustomerFacade.getCustomerFacade(emf);
-    }
+//
+//    public static void main(String[] args) throws IOException {
+//        emfCustomer = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
+//        CustomerFacade facade = CustomerFacade.getCustomerFacade(emfCustomer);
+//    }
 }
