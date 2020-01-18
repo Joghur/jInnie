@@ -50,7 +50,7 @@ public class SetupTestUsers {
         EntityManager em = emf.createEntityManager();
 
         System.out.println("\nAdding MasterData");
-        facade.createMasterData("SanderSoft", "c/o Sander-Thomsen, Hjortevænget 604, 2980 Kokkedal", "26814687", "info@sandersoft.dk", "40696067", "Sparekassen Vendsyssel", "9070 2600021071");
+        facade.createMasterData("SanderSoft", "c/o Sander-Thomsen, Hjortevænget 604, 2980 Kokkedal", "26814687", "info@sandersoft.dk", "40696067", "Sparekassen Vendsyssel", "");
 
     }
 

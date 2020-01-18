@@ -11,3 +11,4 @@ target
 .idea
 *.iml
 /nbproject/
+src/main/java/utils/SetupTestUsers.java
