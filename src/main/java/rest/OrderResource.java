@@ -6,11 +6,10 @@ import entities.Ordrer;
 import facades.CustomerFacade;
 import facades.OrderFacade;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -46,7 +45,7 @@ public class OrderResource {
 
     @GET
     @Path("all")
-//    @RolesAllowed({"user", "admin"})
+    @RolesAllowed({"user", "admin"})
     @Produces({MediaType.APPLICATION_JSON})
     public List<OrderDTO> getAllOrders() {
         List<Ordrer> list = FACADE.findAllOrders();
@@ -59,7 +58,7 @@ public class OrderResource {
 
     @POST
     @Path("new")
-//    @RolesAllowed({"user", "admin"})
+    @RolesAllowed({"user", "admin"})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public OrderDTO createOrder(OrderPOSTDTO o) {
@@ -76,7 +75,7 @@ public class OrderResource {
 
     @DELETE
     @Path("delete/{id}")
-//    @RolesAllowed({"user", "admin"})
+    @RolesAllowed({"user", "admin"})
     @Produces({MediaType.APPLICATION_JSON})
     public String deleteOrder(@PathParam("id") int id) throws WebApplicationException {
         FACADE.deleteOrder(id);
@@ -86,7 +85,7 @@ public class OrderResource {
     @GET
     @Path("pdf/download/{customerID}/{ordrerID}")
     @Produces("application/pdf")
-//    @RolesAllowed({"user", "admin"})
+    @RolesAllowed({"user", "admin"})
     public Response makeDownloadPDF(@PathParam("customerID") int customerID, @PathParam("ordrerID") int ordrerID) throws WebApplicationException, IOException {
         ResponseBuilder response = null;
         ByteArrayOutputStream output;
@@ -104,7 +103,7 @@ public class OrderResource {
     @GET
     @Path("pdf/show/{customerID}/{ordrerID}")
     @Produces("application/pdf")
-//    @RolesAllowed({"user", "admin"})
+    @RolesAllowed({"user", "admin"})
     public Response makeShowPDF(@PathParam("customerID") int customerID, @PathParam("ordrerID") int ordrerID) throws WebApplicationException, IOException {
         ResponseBuilder response = null;
         ByteArrayOutputStream output;

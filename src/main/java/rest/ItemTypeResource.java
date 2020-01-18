@@ -3,9 +3,9 @@ package rest;
 import dto.ItemTypeDTO;
 import entities.ItemType;
 import facades.ItemTypeFacade;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import utils.EMF_Creator;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.Consumes;
@@ -38,7 +38,7 @@ public class ItemTypeResource {
 
     @GET
     @Path("all")
-//    @RolesAllowed({"user", "admin"})
+    @RolesAllowed({"user", "admin"})
     @Produces({MediaType.APPLICATION_JSON})
     public List<ItemTypeDTO> getAllOrders() {
         List<ItemType> list = FACADE.findAllItemTypes();
@@ -51,7 +51,7 @@ public class ItemTypeResource {
 
     @POST
     @Path("new")
-//    @RolesAllowed({"user", "admin"})
+    @RolesAllowed({"user", "admin"})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public ItemTypeDTO createItemType(ItemTypeDTO item) {
@@ -60,7 +60,7 @@ public class ItemTypeResource {
 
     @PUT
     @Path("edit")
-//    @RolesAllowed({"user", "admin"})
+    @RolesAllowed({"user", "admin"})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public ItemTypeDTO editPerson(ItemTypeDTO changedItem) throws WebApplicationException {
@@ -69,7 +69,7 @@ public class ItemTypeResource {
 
     @DELETE
     @Path("/delete/{id}")
-//    @RolesAllowed({"user", "admin"})
+    @RolesAllowed({"user", "admin"})
     @Produces({MediaType.APPLICATION_JSON})
     public String deletePerson(@PathParam("id") int id) throws WebApplicationException {
         FACADE.deleteItemType(id);

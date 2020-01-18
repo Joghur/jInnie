@@ -38,6 +38,7 @@ public class InfoResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("all")
+    @RolesAllowed({"user", "admin"})
     public String allUsers() {
 
         EntityManager em = EMF.createEntityManager();
@@ -75,13 +76,13 @@ public class InfoResource {
 //        setup.fill();
 //        return "{\"msg\": \"DB filled\"}";
 //    }
-//    @GET
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @Path("fillmaster")
-//    public String fillDB() {
-//        utils.SetupTestUsers setup = new utils.SetupTestUsers();
-//        setup.fill();
-//        return "{\"msg\": \"DB master filled\"}";
-//    }
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("fillmaster")
+    public String fillDB() {
+        utils.SetupTestUsers setup = new utils.SetupTestUsers();
+        setup.fill();
+        return "{\"msg\": \"DB master filled\"}";
+    }
     
 }

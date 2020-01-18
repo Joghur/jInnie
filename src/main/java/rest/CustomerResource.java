@@ -3,6 +3,7 @@ package rest;
 import dto.CustomerDTO;
 import facades.CustomerFacade;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import utils.EMF_Creator;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.Consumes;
@@ -35,7 +36,7 @@ public class CustomerResource {
 
     @GET
     @Path("all")
-//    @RolesAllowed({"user", "admin"})
+    @RolesAllowed({"user", "admin"})
     @Produces({MediaType.APPLICATION_JSON})
     public List<CustomerDTO> getAllCustomers() {
         return FACADE.findAllCustomers();
@@ -43,7 +44,7 @@ public class CustomerResource {
 
     @POST
     @Path("new")
-//    @RolesAllowed({"user", "admin"})
+    @RolesAllowed({"user", "admin"})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public CustomerDTO createItemType(CustomerDTO item) {
@@ -52,7 +53,7 @@ public class CustomerResource {
 
     @PUT
     @Path("edit")
-//    @RolesAllowed({"user", "admin"})
+    @RolesAllowed({"user", "admin"})
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public CustomerDTO editCustomer(CustomerDTO changedItem) throws WebApplicationException {
@@ -61,7 +62,7 @@ public class CustomerResource {
 
     @DELETE
     @Path("/delete/{id}")
-//    @RolesAllowed({"user", "admin"})
+    @RolesAllowed({"user", "admin"})
     @Produces({MediaType.APPLICATION_JSON})
     public String deleteCustomer(@PathParam("id") int id) throws WebApplicationException {
         FACADE.deleteCustomer(id);
