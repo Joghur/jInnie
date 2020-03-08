@@ -68,21 +68,22 @@ public class InfoResource {
         return "{\"msg\": \"Hello to (admin) User: " + thisuser + "\"}";
     }
 
-//    @GET
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @Path("fill")
-//    public String fillDB() {
-//        utils.SetupTestUsers setup = new utils.SetupTestUsers();
-//        setup.fill();
-//        return "{\"msg\": \"DB filled\"}";
-//    }
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("fillmaster")
+    @Path("fill")
     public String fillDB() {
         utils.SetupTestUsers setup = new utils.SetupTestUsers();
         setup.fill();
-        return "{\"msg\": \"DB master filled\"}";
+        return "{\"msg\": \"DB filled\"}";
     }
+    
+//    @GET
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Path("fillmaster")
+//    public String fillDB() {
+//        utils.SetupTestUsers setup = new utils.SetupTestUsers();
+//        setup.fill();
+//        return "{\"msg\": \"DB master filled\"}";
+//    }
     
 }

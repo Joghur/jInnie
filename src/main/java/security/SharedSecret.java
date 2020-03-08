@@ -2,6 +2,7 @@
 package security;
 
 import java.security.SecureRandom;
+import utils.Settings;
 
 /* This generates a secure random per execution of the server
  * A server restart, will generate a new key, making all existing tokens invalid
@@ -9,21 +10,9 @@ import java.security.SecureRandom;
 public class SharedSecret {
     private static byte[] secret;
     public static byte[] getSharedKey() {
-      /*
-        System.out.println("******************* IMPORTANT ******************'");
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        System.out.println("**** REMOVE FIXED SECRET BEFORE PRODUCTION *******");
-        System.out.println("****      See security.SharedSecret        *******");
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        */
-        //REMOVE BEFORE PRODUCTION
-        if(true){
-            return "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA".getBytes();
-        }
-        if (secret == null) {  //Or better read as an environment variable set on production server
-            secret = new byte[32];
+        if (secret == null) {
+            secret = System.getenv("SECRET")!=null? System.getenv("SECRET").getBytes() : Settings.getPropertyValue("local.secret").getBytes();
+//            System.out.println("secret: " + secret);
             new SecureRandom().nextBytes(secret);
         }
         return secret;

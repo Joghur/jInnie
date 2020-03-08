@@ -83,17 +83,17 @@ public class OrderResource {
     }
 
     @GET
-    @Path("pdf/download/{customerID}/{ordrerID}")
+    @Path("pdf/download/{customerID}/{ordrerID}/{invoiceID}")
     @Produces("application/pdf")
     @RolesAllowed({"user", "admin"})
-    public Response makeDownloadPDF(@PathParam("customerID") int customerID, @PathParam("ordrerID") int ordrerID) throws WebApplicationException, IOException {
+    public Response makeDownloadPDF(@PathParam("customerID") int customerID, @PathParam("ordrerID") int ordrerID, @PathParam("invoiceID") int invoiceID) throws WebApplicationException, IOException {
         ResponseBuilder response = null;
         ByteArrayOutputStream output;
         try {
             output = FACADE.makePDF(customerID, ordrerID);
 
             response = Response.ok(output.toByteArray());
-            response.header("Content-Disposition", "attachment; filename=sandersoft.pdf");
+            response.header("Content-Disposition", "attachment; filename=sandersoft_ordre_"+invoiceID+".pdf");
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -101,17 +101,17 @@ public class OrderResource {
     }
 
     @GET
-    @Path("pdf/show/{customerID}/{ordrerID}")
+    @Path("pdf/show/{customerID}/{ordrerID}/{invoiceID}")
     @Produces("application/pdf")
     @RolesAllowed({"user", "admin"})
-    public Response makeShowPDF(@PathParam("customerID") int customerID, @PathParam("ordrerID") int ordrerID) throws WebApplicationException, IOException {
+    public Response makeShowPDF(@PathParam("customerID") int customerID, @PathParam("ordrerID") int ordrerID, @PathParam("invoiceID") int invoiceID) throws WebApplicationException, IOException {
         ResponseBuilder response = null;
         ByteArrayOutputStream output;
         try {
             output = FACADE.makePDF(customerID, ordrerID);
 
             response = Response.ok(output.toByteArray());
-            response.header("Content-Disposition", "filename=sandersoft.pdf");
+            response.header("Content-Disposition", "filename=sandersoft_ordre_"+invoiceID+".pdf");
         } catch (IOException ex) {
             ex.printStackTrace();
         }

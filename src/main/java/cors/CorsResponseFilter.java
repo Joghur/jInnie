@@ -19,8 +19,9 @@ public class CorsResponseFilter implements ContainerResponseFilter {
     // LOG.info( "Executing REST response filter" );
     res.getHeaders().add("Access-Control-Allow-Origin", "*" );
 //    res.getHeaders().add("Access-Control-Allow-Origin", "https://www.sandersoft.dk" );
+//    res.getHeaders().add("Access-Control-Allow-Origin", "https://localhost:3000" );
 //    res.getHeaders().add("Vary", "Origin" );
-    res.getHeaders().add("Access-Control-Allow-Credentials", "true" );
+//    res.getHeaders().add("Access-Control-Allow-Credentials", "true" );
     res.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT" );
     res.getHeaders().add("Access-Control-Allow-Headers", "Origin, Accept, Content-Type, Authorization,x-access-token");
   }
