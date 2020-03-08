@@ -3,8 +3,12 @@ package utils;
 import entities.Customer;
 import entities.MasterData;
 import entities.Ordrer;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,7 +28,8 @@ public class pdfMaker {
     private List<String> textListe;
 
     public pdfMaker() throws IOException {
-        file = new File("src/main/resources/pdf/EmptyPDF.pdf");
+//        file = new File("src/main/resources/pdf/EmptyPDF.pdf");
+        file = new File(getClass().getClassLoader().getResource("pdf/EmptyPDF.pdf").getFile());
         doc = PDDocument.load(file);
         page = doc.getPage(0);
         contents = new PDPageContentStream(doc, page);
@@ -34,7 +39,7 @@ public class pdfMaker {
 //        new pdfMaker().invoicePDFFlow();
     }
 
-    public void invoicePDFFlow(MasterData ma, List<String> ol1List,
+    public ByteArrayOutputStream invoicePDFFlow(MasterData ma, List<String> ol1List,
             Customer cust, Ordrer or, float totalPrice) throws IOException {
         List<String> subtext = new ArrayList<>();
         List<String> subtext2 = new ArrayList<>();
@@ -105,13 +110,22 @@ public class pdfMaker {
 
         System.out.println("Content added");
         contents.close();
-        doc.save("src/main/resources/pdf/sample.pdf");
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        doc.save(output);
         doc.close();
+        return output;
     }
 
     private void imagePDF() throws IOException {
         // Drawing the image in the PDF document
-        PDImageXObject pdImage = PDImageXObject.createFromFile("src/main/resources/image/logo.png", doc);
+        File imagefile = new File(getClass().getClassLoader().getResource("image/logo.png").getFile());
+
+//        PDImageXObject pdImage = PDImageXObject.createFromFile("src/main/resources/image/logo.png", doc);
+//        System.out.println("this.getClass().getResource(image/logo.png).toString(): " + this.getClass().getResource("image/logo.png").toString());
+        System.out.println("imagefile.getAbsolutePath(): " + imagefile.getAbsolutePath());
+        System.out.println("imagefile.getCanonicalPath(): " + imagefile.getCanonicalPath());
+        PDImageXObject pdImage = PDImageXObject.createFromFile(imagefile.getAbsolutePath(), doc);
         System.out.println("Image inserted");
         contents.drawImage(pdImage, 370, 720);
     }

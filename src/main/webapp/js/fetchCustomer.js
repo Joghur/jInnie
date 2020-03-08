@@ -31,7 +31,7 @@ function getAllCustomers() {
                     if (document.querySelector("#content table") != null) {
                         document.querySelector("#content table").remove();
                     }
-                    alert("\n\nNo data left!");
+                    alert("\n\nNo data!");
                 }
                 insertNewCustomerModal(); // new overlay
             });

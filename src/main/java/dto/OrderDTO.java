@@ -3,10 +3,8 @@ package dto;
 import entities.OrderLine;
 import entities.Ordrer;
 import enumeration.OrderState;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  *
@@ -22,7 +20,7 @@ public class OrderDTO {
     private OrderState orderState;
     private float totalPrice = 0;
     private List<OrderLineDTO> orderLines = new ArrayList();
-    private final Locale dk = new Locale("da", "DK");
+//    private final Locale dk = new Locale("da", "DK");
 
     public OrderDTO() {
     }
@@ -31,9 +29,9 @@ public class OrderDTO {
         this.ordrerID = m.getOrdrerID();
         this.invoiceID = m.getInvoiceID();
         this.customerID = m.getCustomer().getCustomerID();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/LLL-yyyy", dk);
-        this.invoiceDate = m.getInvoiceDate().format(formatter);
-        this.workDoneDate = m.getWorkDoneDate().format(formatter);
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/LLL-yyyy", dk);
+        this.invoiceDate = m.getInvoiceDate();
+        this.workDoneDate = m.getWorkDoneDate();
         this.orderState = m.getOrderState();
         for (OrderLine orderLine : m.getOrderLines()) {
             if (orderLine != null) {

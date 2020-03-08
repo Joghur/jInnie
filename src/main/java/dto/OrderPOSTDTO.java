@@ -1,13 +1,5 @@
 package dto;
 
-import entities.OrderLine;
-import entities.Ordrer;
-import static entities.Ordrer_.invoiceDate;
-import static entities.Ordrer_.invoiceID;
-import static entities.Ordrer_.orderState;
-import static entities.Ordrer_.ordrerID;
-import enumeration.OrderState;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 

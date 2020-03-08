@@ -3,6 +3,7 @@ package entities;
 import enumeration.OrderState;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -36,8 +37,8 @@ public class Ordrer implements Serializable { //spelled like that to avoid possi
     private Integer ordrerID;
 
     private Integer invoiceID;
-    private LocalDate invoiceDate;
-    private LocalDate workDoneDate;
+    private String invoiceDate;
+    private String workDoneDate;
     private OrderState orderState;
 
     @OneToMany(mappedBy = "ordrer", cascade = CascadeType.PERSIST)
@@ -50,14 +51,16 @@ public class Ordrer implements Serializable { //spelled like that to avoid possi
     public Ordrer() {
         this.orderState = OrderState.ORDER_RECEIVED;
         this.invoiceID = this.hashCode();
-        this.invoiceDate = LocalDate.now();
+        String formattedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MMM-yyyy"));
+        this.invoiceDate = formattedDate.replace(".","").toString();
     }
 
-    public Ordrer(LocalDate workDoneDate, Customer customer, List<OrderLine> orderLines) {
+    public Ordrer(String workDoneDate, Customer customer, List<OrderLine> orderLines) {
         this.orderState = OrderState.ORDER_RECEIVED;
         this.invoiceID = this.hashCode();
-        this.invoiceDate = LocalDate.now();
-        this.workDoneDate = workDoneDate;
+        String formattedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MMM-yyyy"));
+        this.invoiceDate = formattedDate.replace(".","").toString();
+        this.workDoneDate = workDoneDate.replace(".","").toString();
         this.customer = customer;
         this.orderLines = orderLines;
     }
@@ -86,19 +89,19 @@ public class Ordrer implements Serializable { //spelled like that to avoid possi
         this.invoiceID = invoiceID;
     }
 
-    public LocalDate getInvoiceDate() {
+    public String getInvoiceDate() {
         return invoiceDate;
     }
 
-    public void setInvoiceDate(LocalDate invoiceDate) {
+    public void setInvoiceDate(String invoiceDate) {
         this.invoiceDate = invoiceDate;
     }
 
-    public LocalDate getWorkDoneDate() {
+    public String getWorkDoneDate() {
         return workDoneDate;
     }
 
-    public void setWorkDoneDate(LocalDate workDoneDate) {
+    public void setWorkDoneDate(String workDoneDate) {
         this.workDoneDate = workDoneDate;
     }
 
@@ -127,7 +130,7 @@ public class Ordrer implements Serializable { //spelled like that to avoid possi
 
     @Override
     public int hashCode() {
-        int hash = 65863;
+        int hash = 65910;
         hash += +Objects.hashCode(this.ordrerID);
         return hash;
     }

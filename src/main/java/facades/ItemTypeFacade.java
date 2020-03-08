@@ -1,11 +1,7 @@
 package facades;
 
 import dto.ItemTypeDTO;
-import entities.Customer;
 import entities.ItemType;
-import entities.MasterData;
-import entities.OrderLine;
-import entities.Ordrer;
 import java.io.IOException;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -60,15 +56,21 @@ public class ItemTypeFacade {
         }
     }
 
-    public ItemTypeDTO editItemType(int id, ItemTypeDTO item) throws WebApplicationException {
+    public ItemTypeDTO editItemType(ItemTypeDTO item) throws WebApplicationException {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
-            ItemType c = em.find(ItemType.class, id);
-            c.setName(item.getName());
-            c.setDescription(item.getDescription());
-            c.setPrice(item.getPrice());
-            em.persist(c);
+            ItemType c = em.find(ItemType.class, item.getItemTypeID());
+            if (item.getName() != null && !item.getName().isEmpty()) {
+                c.setName(item.getName());
+            }
+            if (item.getDescription() != null && !item.getDescription().isEmpty()) {
+                c.setDescription(item.getDescription());
+            }
+            if (item.getPrice() > 0.0) {
+                c.setPrice(item.getPrice());
+            }
+            em.merge(c);
             em.getTransaction().commit();
             return new ItemTypeDTO(c);
         } finally {
